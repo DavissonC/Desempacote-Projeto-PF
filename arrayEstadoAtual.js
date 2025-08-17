@@ -1,7 +1,7 @@
 const estadoAtual = [{ // A array com o único objeto de estado dentro dela
     imagens: {
-        'img1': { src: 'armario.jpg' },
-        'img2': { src: 'https://via.placeholder.com/150/FF0000/FFFFFF?text=B' },
+        'img1': { src: 'armário.jpg' , alt: 'ArmárioGrande'},
+        'img2': { src: 'https://png.pngtree.com/png-clipart/20230914/original/pngtree-water-jug-vector-png-image_11243534.png', alt: 'Jarro 2D' },
         'img3': { src: 'https://via.placeholder.com/150/008000/FFFFFF?text=C' },
         'img4': { src: 'https://via.placeholder.com/150/FFFF00/000000?text=D' }
     },
@@ -13,15 +13,15 @@ const estadoAtual = [{ // A array com o único objeto de estado dentro dela
     zonaEmHover: null // ID da zona que está com o mouse por cima
 }]
 // Recebe o estado e retorna uma string HTML. Não modifica nada fora dela.
-function renderizar(estado) {
+const renderizar = (estado) => {
 
-    // Aqui usamos Object.keys() para pegar ['galeria', 'favoritos'] e com o .map, executamos algumas tarefas
+    // Aqui usamos Object.keys() para pegar ['galeria', 'favoritos'] e com o .map, executamos algumas tarefas para gerar a string HTML
     return Object.keys(estado.zonas).map(zonaId => {
         return `<div 
                 class="drop-zone ${
 
                 /* Verifica se a zona em hover (em que o cursor está sobrevoando) é igual à 'zonaId' para aplicar 
-                à string em html a string 'drag-over' ou '' */
+                à string em html a classe'drag-over' ou '' */
                 (estado.zonaEmHover === zonaId) ? 'drag-over' : ''}" 
                 id="${zonaId}"
             >
@@ -38,6 +38,7 @@ function renderizar(estado) {
                         return `
                             <img 
                                 src="${imagem.src}" 
+                                alt="${imagem.alt}"
                                 id="${imgId}" 
                                 class="imagem-arrastavel ${(estado.imagemSendoArrastada === imgId) ? 'arrastando' : ''}" 
                                 draggable="true"
@@ -48,7 +49,7 @@ function renderizar(estado) {
     }).join('');
     // .join é usado para unir a array em uma única string
 }
-// Funções que recebem o estado antigo e retornam um NOVO estado.
+// as funções abaixo recebem o estado antigo e retornam um novo estado atualizado
 
 const iniciarArrastar = (estado, idDaImagem) => {
     return { ...estado, imagemSendoArrastada: idDaImagem }
@@ -63,76 +64,17 @@ const atualizarZonaEmHover = (estado, idDaZona) => {
 }
 
 const moverImagem = (estado, idDaZonaDestino) => {
-    const idDaImagem = estado.imagemSendoArrastada
-    if (!idDaImagem) return estado // Não faz nada se nenhuma imagem estiver sendo arrastada
 
-    // Cria um novo objeto de zonas para não modificar o original
-    const novasZonas = { ...estado.zonas }
-    
-    // Remove a imagem de todas as zonas (a forma mais fácil de garantir que ela saia da original)
-    for (const zonaId in novasZonas) {
-        novasZonas[zonaId] = novasZonas[zonaId].filter(id => id !== idDaImagem)
-    }
-    
-    // Adiciona a imagem à zona de destino
-    novasZonas[idDaZonaDestino] = [...novasZonas[idDaZonaDestino], idDaImagem]
+    // Salva o ID da imagem que está sendo arrastada para um uso posterior
+    const idDaImagem = estado.imagemSendoArrastada;
 
-    // Retorna o novo estado completo
-    return { ...estado, zonas: novasZonas }
-}
+    // Se não houver uma imagem sendo arrastada, retorna a string anterior
+    if (!idDaImagem) return estado;
 
-// =======================================================
-// 4. GERENCIADOR DE EVENTOS (CAMADA IMPURA)
-// =======================================================
+    else{
+        // Pega as chaves do objeto de zonas original
+        const chavesDasZonas = Object.keys(estado.zonas);
 
-const appContainer = document.getElementById('app')
-
-function atualizarTela() {
-    appContainer.innerHTML = renderizar(...estadoAtual)
-    adicionarEventListeners()
-}
-
-function adicionarEventListeners() {
-    document.querySelectorAll('.imagem-arrastavel').forEach(imagem => {
-        imagem.addEventListener('dragstart', (e) => {
-            const novoEstado = iniciarArrastar(estadoAtual[0], e.target.id)
-            estadoAtual[0] = novoEstado
-            setTimeout(atualizarTela, 0) 
-        });
-        imagem.addEventListener('dragend', () => {
-            estadoAtual = finalizarArrastar(estadoAtual[0])
-            atualizarTela()
-        });
-    });
-
-    document.querySelectorAll('.drop-zone').forEach(zona => {
-        // O dragover apenas previne o comportamento padrão e adiciona a classe
-        // diretamente, sem redesenhar a tela inteira.
-        zona.addEventListener('dragover', (e) => {
-            e.preventDefault()
-            e.currentTarget.classList.add('drag-over')
-        });
-
-        // O dragleave apenas remove a classe diretamente.
-        zona.addEventListener('dragleave', (e) => {
-            e.currentTarget.classList.remove('drag-over')
-        })
-
-        // O drop precisa remover a classe 'drag-over'.
-        zona.addEventListener('drop', (e) => {
-            e.preventDefault()
-            e.currentTarget.classList.remove('drag-over') // Limpa o hover
-
-            // A lógica funcional de atualização de estado permanece a mesma!
-            const estadoAposMover = moverImagem(estadoAtual[0], e.currentTarget.id)
-            estadoAtual[0] = finalizarArrastar(estadoAposMover)
-            
-            // A tela só é redesenhada uma vez, no final da operação.
-            atualizarTela()
-        })
-    })
-}
-        
-// Inicia a aplicação pela primeira vez
-atualizarTela();
-
+        // zonasAtualizadas usa chavesDasZonas.reduce() para construir um novo objeto de zonas do zero
+        const zonasAtualizadas = chavesDasZonas.reduce((acc, zonaId) => {
+            // 
