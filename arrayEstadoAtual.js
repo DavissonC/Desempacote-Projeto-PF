@@ -11,7 +11,7 @@ const estadoAtual = [{ // A array com o único objeto de estado dentro dela
     },
     imagemSendoArrastada: null, // ID da imagem em trânsito
     zonaEmHover: null // ID da zona que está com o mouse por cima
-
+}]
 // Recebe o estado e retorna uma string HTML. Não modifica nada fora dela.
 const renderizar = (estado) => {
     // Aqui usamos Object.keys() para pegar ['galeria', 'favoritos'] e com o .map, executamos algumas tarefas
@@ -129,3 +129,4 @@ function adicionarEventListeners() {
         
 // Inicia a aplicação pela primeira vez
 atualizarTela();
+
