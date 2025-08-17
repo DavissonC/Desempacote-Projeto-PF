@@ -88,19 +88,19 @@ const moverImagem = (estado, idDaZonaDestino) => {
 const appContainer = document.getElementById('app')
 
 function atualizarTela() {
-    appContainer.innerHTML = renderizar(estadoAtual)
+    appContainer.innerHTML = renderizar(...estadoAtual)
     adicionarEventListeners()
 }
 
 function adicionarEventListeners() {
     document.querySelectorAll('.imagem-arrastavel').forEach(imagem => {
         imagem.addEventListener('dragstart', (e) => {
-            const novoEstado = iniciarArrastar(estadoAtual, e.target.id)
-            estadoAtual = novoEstado
+            const novoEstado = iniciarArrastar(estadoAtual[0], e.target.id)
+            estadoAtual[0] = novoEstado
             setTimeout(atualizarTela, 0) 
         });
         imagem.addEventListener('dragend', () => {
-            estadoAtual = finalizarArrastar(estadoAtual)
+            estadoAtual = finalizarArrastar(estadoAtual[0])
             atualizarTela()
         });
     });
@@ -124,8 +124,8 @@ function adicionarEventListeners() {
             e.currentTarget.classList.remove('drag-over') // Limpa o hover
 
             // A lógica funcional de atualização de estado permanece a mesma!
-            const estadoAposMover = moverImagem(estadoAtual, e.currentTarget.id)
-            estadoAtual = finalizarArrastar(estadoAposMover)
+            const estadoAposMover = moverImagem(estadoAtual[0], e.currentTarget.id)
+            estadoAtual[0] = finalizarArrastar(estadoAposMover)
             
             // A tela só é redesenhada uma vez, no final da operação.
             atualizarTela()
@@ -135,3 +135,4 @@ function adicionarEventListeners() {
         
 // Inicia a aplicação pela primeira vez
 atualizarTela();
+
