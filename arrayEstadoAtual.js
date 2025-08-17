@@ -77,4 +77,90 @@ const moverImagem = (estado, idDaZonaDestino) => {
 
         // zonasAtualizadas usa chavesDasZonas.reduce() para construir um novo objeto de zonas do zero
         const zonasAtualizadas = chavesDasZonas.reduce((acc, zonaId) => {
-            // 
+            // 'acc' é a nossa 'variável acumuladora'
+            // 'zonaId' é a chave atual ('galeria', depois 'favoritos')
+
+            // 1. Remove a imagem da zona atual (se ela estiver lá)
+            const imagensNaZona = estado.zonas[zonaId].filter(id => id !== idDaImagem);
+
+            // 2. Adiciona a imagem se a zona de destino estiver correta
+            if (zonaId === idDaZonaDestino) {
+                acc[zonaId] = [...imagensNaZona, idDaImagem];
+            } else {
+                acc[zonaId] = imagensNaZona;
+            }
+
+            // 3. Retorna o objeto acumulador para a próxima iteração
+            return acc;
+        }, {}); // O {} no final é o valor inicial do nosso acumulador (um objeto vazio)
+
+        // Retorna o novo estado completo com o objeto de zonas totalmente novo
+        return { ...estado, zonas: zonasAtualizadas };
+    }
+};
+
+// Parte não funcional, necessária para o funcionamento do arraste
+
+// appContainer armazena o nosso elemento HTML
+const appContainer = document.getElementById('app');
+
+const atualizarTela = () => {
+    // Passamos o objeto que está dentro do array para a função renderizar.
+    appContainer.innerHTML = renderizar(estadoAtual[0]);
+    adicionarEventListeners();
+}
+
+// adicionarEventListeners 'computa' todas as mudanças que o usuário for fazer na tela 
+const adicionarEventListeners = () => {
+
+    //querySelectorAll seleciona todas as imagens arrastáveis e, para cada uma, adiciona os eventListeners necessários
+    document.querySelectorAll('.imagem-arrastavel').forEach(imagem => {
+        imagem.addEventListener('dragstart', (e) => {
+            
+            // Atualiza o estado da imagem clicada para imagemSendoArrastada
+            const novoEstado = iniciarArrastar(estadoAtual[0], e.target.id);
+            // Atualiza o estado atual
+            estadoAtual[0] = novoEstado;
+
+            // setTimeout pede para que a função seja retornada o mais rápido possível, contanto que o navegador já tenha terminado
+            // suas tarefas antecedentes, garante que a aparência do elemento original só seja alterada depois que o navegador já 
+            // tenha preparado a imagem de arraste 
+            setTimeout(atualizarTela, 0); 
+        });
+        // Indica a finalização do arraste
+        imagem.addEventListener('dragend', () => {
+            estadoAtual[0] = finalizarArrastar(estadoAtual[0]);
+            atualizarTela();
+        });
+    });
+
+    //querySelectorAll() faz, para cada zona, as tarefas abaixo
+    document.querySelectorAll('.drop-zone').forEach(zona => {
+        
+        // dragover significa que a imagem que está sendo arrastada está sobre essa zona em específico
+        zona.addEventListener('dragover', (e) => {
+            // preventDefault previne que apareça um sinal de bloqueado no cursor quando a imagem estiver sobre uma drop zone
+            e.preventDefault();
+            e.currentTarget.classList.add('drag-over');
+        });
+        
+        // dragleave significa que o cursor saiu da drop zone
+        zona.addEventListener('dragleave', (e) => {
+            e.currentTarget.classList.remove('drag-over');
+        });
+
+        // drop significa que o objeto foi solto em uma drop zone
+        zona.addEventListener('drop', (e) => {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-over');
+
+            // estadoAposMover atualiza o 'estadoAtual' para o estado atual
+            const estadoAposMover = moverImagem(estadoAtual[0], e.currentTarget.id);
+            estadoAtual[0] = finalizarArrastar(estadoAposMover);
+            
+            atualizarTela();
+        });
+    });
+}
+// atualizarTela() é usado para fazer o primeiro movimento do código        
+atualizarTela();
