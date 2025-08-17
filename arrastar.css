@@ -1,0 +1,32 @@
+        body {
+            font-family: system-ui, sans-serif;
+            display: flex;
+            justify-content: space-around;
+            padding-top: 40px;
+        }
+        .drop-zone {
+            width: 40%;
+            min-height: 500px;
+            padding: 20px;
+            border: 3px dashed #ccc;
+            border-radius: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            align-content: flex-start;
+            gap: 15px;
+        }
+        .imagem-arrastavel {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 5px;
+            cursor: move;
+            transition: opacity 0.2s;
+        }
+        .imagem-arrastavel.arrastando {
+            opacity: 0.3;
+        }
+        .drop-zone.drag-over {
+            border-color: #007bff;
+            background-color: #e9f5ff;
+        }
