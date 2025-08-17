@@ -1,0 +1,112 @@
+body {
+    font-family: system-ui, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+}
+
+/* Novo container principal para o layout com Flexbox */
+main {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 30px;
+    padding: 30px;
+    width: 90%;
+    margin: auto;
+}
+
+/* Container que agrupa a imagem e a zona 'favoritos' */
+.container-favoritos {
+    position: relative; /* Essencial para posicionar a drop-zone por cima */
+    width: 50%;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    border-radius: 10px;
+}
+
+/* A imagem de fundo real */
+#imagem-fundo {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+        
+/* Estilo geral das drop zones */
+.drop-zone {
+    padding: 20px;
+    border: 3px dashed #ccc;
+    border-radius: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    gap: 15px;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.drop-zone h2 {
+    width: 100%;
+    text-align: center;
+    margin-top: 0;
+}
+        
+/* A zona da galeria, que fica do lado de fora */
+#app-galeria .drop-zone {
+    width: 100%;
+    min-height: 500px;
+    background-color: #ffffff;
+    box-sizing: border-box; /* Garante que padding e borda não aumentem a largura total */
+}
+
+/* A zona de favoritos, que fica SOBRE a imagem */
+#app-favoritos {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    
+    /* Define o layout de grid */
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Duas colunas de tamanho igual */
+    grid-template-rows: 1fr 1fr;    /* Duas linhas de tamanho igual */
+    gap: 10px; /* Espaçamento entre as células do grid */
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+/* MUDANÇA AQUI: Estilizando as drop-zones DENTRO do grid */
+#app-favoritos .drop-zone {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.4);
+    box-sizing: border-box;
+}
+
+#app-favoritos h2 {
+    color: white;
+    text-shadow: 1px 1px 3px black;
+}
+
+/* MUDANÇA AQUI: Posicionando as zonas específicas no grid */
+#prateleira-do-meio {
+    grid-column: 1 / 3; /* Faz esta zona ocupar as 2 colunas */
+}
+
+
+.drop-zone.drag-over {
+    border-color: #00aaff;
+    background-color: rgba(0, 102, 153, 0.5);
+}
+
+.imagem-arrastavel {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 5px;
+    cursor: move;
+}
+
+.imagem-arrastavel.arrastando {
+    opacity: 0.3;
+}
