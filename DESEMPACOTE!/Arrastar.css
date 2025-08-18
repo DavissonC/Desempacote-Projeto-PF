@@ -1,0 +1,243 @@
+body {
+    font-family: system-ui, sans-serif;
+    background-color: #333;
+    margin: 0;
+    display: flex;
+    
+    /* MUDANÇA 1: Alinha os filhos (h1 e main) em uma coluna vertical */
+    flex-direction: column;
+    
+    /* MUDANÇA 2: Centraliza esses filhos horizontalmente na página */
+    align-items: center;
+    
+    min-height: 100vh;
+    overflow-y: auto;
+    text-align: center;
+}
+
+h1 {
+    text-align: center;
+    color: aliceblue;
+    margin-bottom: 20px;
+}
+
+/* Novo container principal para o layout com Flexbox */
+main {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 30px;
+    padding: 30px;
+    width: 90%;
+    max-width: 1200px; /* Limite a largura para melhor controle */
+    margin: 20px auto; /* Adiciona margem superior e inferior, e centraliza horizontalmente */
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Container que agrupa a imagem e o grid de dropzones do armário */
+.armario-visual-container {
+    position: relative; /* Essencial para posicionar o grid #armario-dropzones-grid por cima */
+    width: 800px; /* Largura da imagem do seu armário (AJUSTE PRECISO COM BASE EM 'armario.jpg') */
+    height: 580px; /* Altura da imagem do seu armário (AJUSTE PRECISO COM BASE EM 'armario.jpg') */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+    border-radius: 10px;
+    overflow: hidden; /* Garante que nada vaze para fora */
+    background-color: #eee; /* Cor de fundo para caso a imagem não carregue */
+}
+
+/* A imagem de fundo real do armário */
+#imagem-fundo {
+    display: block;
+    width: 100%;
+    height: 100%; /* Preenche o contêiner .armario-visual-container */
+    object-fit: contain; /* Redimensiona a imagem para caber sem cortar */
+    border-radius: 10px;
+}
+        
+/* Estilo geral das drop zones (as caixas individuais) */
+.drop-zone {
+    /* Removido padding, border, etc. que eram gerais e não funcionariam bem com position:absolute ou grid */
+    position: relative; /* Para posicionar o h2 dentro */
+    display: flex; /* Para centralizar os itens arrastados e o h2 */
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    overflow: hidden;
+    box-sizing: border-box; /* Garante que padding e borda não aumentem o tamanho */
+    transition: background-color 0.3s ease, border-color 0.3s ease; /* Transição suave */
+
+    /* Fundo e borda transparentes por padrão para as dropzones do armário */
+    background-color: rgba(0, 0, 0, 0); 
+    border: 2px dashed rgba(255, 255, 255, 0); 
+    border-radius: 5px; /* Bordas suaves para as dropzones */
+}
+
+.drop-zone h2 {
+    width: 100%;
+    text-align: center;
+    display: none;
+    margin: 0; /* Remove margem padrão */
+    padding: 5px; /* Pequeno padding para o texto */
+    color: white; /* Cor do texto do rótulo da dropzone */
+    text-shadow: 1px 1px 3px black;
+    font-size: 0.8em; /* Ajuste o tamanho da fonte */
+    transition: opacity 0.3s ease;
+    background-color: rgba(0, 0, 0, 0.4); /* Fundo para o rótulo */
+    position: absolute; /* Posiciona o h2 no topo da dropzone */
+    top: 0;
+    left: 0;
+    font-weight: bold;
+    box-sizing: border-box;
+    pointer-events: none; /* Garante que o h2 não bloqueie eventos de arrastar/soltar */
+}
+
+.drop-zone.drag-over {
+    background-color: rgba(0, 123, 255, 0.3); /* Fundo semi-transparente azul ao passar o mouse */
+    border-color: rgba(0, 123, 255, 0.8); /* Borda azul visível */
+}
+.drop-zone.drag-over h2 {
+    opacity: 1; /* Rótulo visível ao passar o mouse */
+}
+
+.drop-zone.occupied {
+    background-color: rgba(40, 167, 69, 0.2); /* Fundo semi-transparente verde quando ocupado */
+    border-color: rgba(40, 167, 69, 0.7); /* Borda verde visível */
+    border-style: solid; /* Borda sólida */
+}
+.drop-zone.occupied h2 {
+    opacity: 1; /* Rótulo visível quando ocupado */
+}
+
+/* A zona da galeria (o contêiner #app-galeria e a drop-zone #galeria) */
+#app-galeria {
+    width: 300px;
+    min-height: 500px;
+    background-color: #ffffff;
+    box-sizing: border-box;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#galeria.drop-zone {
+    width: 100%;
+    min-height: 400px;
+    border: 2px dashed #a0a0a0;
+    background-color: #f9f9f9;
+    align-content: flex-start;
+    padding: 10px;
+    flex-grow: 1; /* Permite que a galeria preencha o espaço vertical disponível */
+}
+
+#galeria.drop-zone h2 {
+    position: static;
+    background-color: transparent;
+    color: #333;
+    text-shadow: none;
+    font-size: 1.2em;
+    opacity: 1;
+    padding: 0;
+    margin-bottom: 10px;
+}
+
+/* ================================================= */
+/* GRID MESTRE PARA AS DROPZONES DO ARMÁRIO */
+/* ================================================= */
+#armario-dropzones-grid {
+    position: absolute; /* Posicionado sobre a imagem de fundo */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 17.5% 17.5% 30% 17.5% 17.5%; /* Mantenho 1fr igual para a maioria, 1.5fr para a col5 com mais itens */
+    grid-template-rows: 100%; /* Uma única linha principal, os col-containers terão subgrids/flexbox */
+    gap: 0; /* Não há gap entre as grandes células do grid mestre */
+    padding: 0.5%; 
+    box-sizing: border-box; 
+   
+}
+
+/* ================================================= */
+/* CONTÊINERES DE COLUNA (itens do grid mestre) */
+/* ================================================= */
+.col-container {
+    display: grid; /* Cada coluna é um NOVO GRID para suas dropzones internas */
+    /* Por padrão, ocupará 100% da célula do grid mestre */
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 5px; /* Padding para afastar as dropzones das bordas das colunas */
+    gap: 5px; /* Espaçamento entre as dropzones dentro da coluna */
+}
+
+/* Coluna 1 (mais à esquerda - 2 dropzones) */
+#col1-container {
+    grid-column: 1;
+    grid-row: 1; /* Todas as col-containers ficam na primeira (e única) linha do grid mestre */
+    grid-template-rows: 1fr 1fr; /* Divide a altura em 2 linhas para 2 dropzones */
+}
+
+/* Coluna 2 (2 dropzones) */
+#col2-container {
+    grid-column: 2;
+    grid-row: 1;
+    grid-template-rows: 1fr 1fr; /* Divide a altura em 2 linhas para 2 dropzones */
+}
+
+/* Coluna 3 (central - 2 dropzones) */
+#col3-container {
+    grid-column: 3;
+    grid-row: 1;
+    grid-template-rows: 60% 40%; /* ALTERADO AQUI: Agora divide a altura em 2 linhas para as 2 dropzones */
+
+}
+
+/* Coluna 4 (2 dropzones) */
+#col4-container {
+    grid-column: 4;
+    grid-row: 1;
+    grid-template-rows: 20% 80%; /* Divide a altura em 2 linhas para 2 dropzones */
+}
+
+/* Coluna 5 (mais à direita - 5 dropzones) */
+#col5-container {
+    grid-column: 5;
+    grid-row: 1;
+    grid-template-rows: 20% 18% 16% 18% 28%; /* Divide a altura em 5 linhas para 5 dropzones */
+}
+
+
+/* ================================================= */
+/* POSICIONAMENTO DAS DROPZONES REAIS DENTRO DE SEUS CONTÊINERES DE COLUNA */
+/* ================================================= */
+/* As dropzones com IDs como #colX-dzY são itens dos seus respectivos .col-container.
+   Elas se auto-posicionarão dentro do grid definido pelo .col-container. */
+
+.item-coluna { /* Classe para todas as dropzones que são itens de coluna */
+    width: 100%;
+    height: 100%;
+    /* Debug: Adicionando bordas e fundos para ver as dropzones REAIS */
+    border: 1px solid rgba(0, 128, 0, 0.8); /* Borda VERDE para as dropzones internas */
+    background-color: rgba(0, 128, 0, 0.1); /* Fundo VERDE para as dropzones internas */
+}
+
+/* Estilos para as imagens arrastáveis (dentro das dropzones) */
+.imagem-arrastavel {
+    width: 120px; /* Tamanho padrão das imagens arrastáveis */
+    height: 120px;
+    object-fit: contain; /* Para que a imagem caiba sem cortar */
+    border-radius: 5px;
+    cursor: grab;
+    transition: opacity 0.2s ease-in-out;
+    /* Certifica que as imagens não bloqueiam eventos de arrastar/soltar das dropzones */ 
+}
+
+.imagem-arrastavel.arrastando {
+    opacity: 0.3;
+}
