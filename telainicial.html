@@ -1,36 +1,87 @@
 <!doctype html>
+
 <html lang="pt-BR">
+
 <head>
+
   <meta charset="utf-8" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <title>Desempacote — Tela Inicial</title>
+
+  <link rel="stylesheet" href="style.css" />
+
 </head>
+
 <body>
+
   <div class="falling-container"></div>
+
+
+
   <div class="frame" aria-label="Tela inicial">
+
     <main class="panel" role="dialog" aria-labelledby="title">
+
       <h1 id="title">Desempacote</h1>
+
       <p class="subtitle" id="tagline">Organize e Desempacote</p>
+
+
+
       <div class="actions" role="group" aria-label="Ações principais">
+
         <button id="playBtn" aria-label="Jogar">Jogar</button>
+
         <button id="creditsBtn" aria-haspopup="dialog" aria-controls="credits">Créditos</button>
+
       </div>
+
     </main>
+
+
+
     <img class="sticker" src="caixa.png" alt="Caixa de mudança decorativa" />
+
+
+
     <div class="footer">Pressione Enter para Jogar • Esc fecha janelas</div>
+
   </div>
+
+
+
   <dialog id="credits" aria-labelledby="creditsTitle">
+
     <div class="modal-body">
+
       <h2 class="modal-title" id="creditsTitle">Créditos</h2>
+
       <ul class="credits-list">
+
         <li>Nicolas Oliveira — Desenvolvimento</li>
+
         <li>Davisson Cavalcante — Desenvolvimento</li>
+
         <li>Bruno Danton — Desenvolivmento</li>
+
       </ul>
+
     </div>
+
     <div class="modal-actions">
+
       <button class="linklike" id="closeCredits">Fechar</button>
+
     </div>
+
   </dialog>
+
+
+
+  <script src="script.js"></script>
+
 </body>
+
 </html>
