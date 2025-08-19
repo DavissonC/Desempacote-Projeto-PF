@@ -1,0 +1,172 @@
+<style>
+  :root{
+    --bg: #fff8f2;
+    --ink: #4a3f3a;
+    --accent: #e7c8a0;
+    --accent-2: #f3dfc8;
+    --btn: #d8b692;
+    --btn-hover: #caa57d;
+    --focus: #6a4f3b;
+    --shadow: 0 6px 20px rgba(0,0,0,.08);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    color: var(--ink);
+    background: url('foto.png') no-repeat center center fixed;
+    background-size: cover;
+    overflow: hidden;
+  }
+
+  .frame {
+    position: relative;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+  }
+
+  .panel {
+    width: min(92vw, 720px);
+    background: rgba(255,255,255, .75);
+    backdrop-filter: blur(6px);
+    border: 2px solid #e9d9c7;
+    border-radius: 18px;
+    box-shadow: var(--shadow);
+    padding: clamp(24px, 5vw, 48px);
+    text-align: center;
+  }
+
+  h1 {
+    margin: 0 0 12px;
+    font-size: clamp(40px, 6.5vw, 80px);
+    line-height: 1;
+    letter-spacing: .5px;
+    text-shadow: 0 2px 0 rgba(0,0,0,.05);
+  }
+
+  .subtitle {
+    margin: 0 0 28px;
+    font-size: clamp(14px, 2.6vw, 18px);
+    opacity: .8;
+  }
+
+  .actions {
+    display: grid;
+    gap: 14px;
+    justify-content: center;
+    grid-template-columns: repeat(2, minmax(140px, 200px));
+  }
+
+  button {
+    appearance: none;
+    border: 0;
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #2f251f;
+    background: var(--btn);
+    cursor: pointer;
+    box-shadow: 0 3px 0 rgba(0,0,0,.08), var(--shadow);
+    transition: transform .06s ease, filter .15s ease, background .15s ease;
+  }
+  button:hover { background: var(--btn-hover); transform: translateY(-1px); }
+  button:active { transform: translateY(1px) scale(.99); }
+  button:focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 3px;
+  }
+
+  .sticker {
+    position: absolute;
+    right: clamp(8px, 4vw, 32px);
+    bottom: clamp(8px, 4vw, 24px);
+    width: clamp(80px, 18vw, 160px);
+    opacity: .9;
+    transform: rotate(-3deg);
+    filter: drop-shadow(0 10px 12px rgba(0,0,0,.12));
+    user-select: none;
+    pointer-events: none;
+  }
+
+  dialog {
+    border: 0;
+    border-radius: 16px;
+    padding: 0;
+    width: min(92vw, 520px);
+    box-shadow: var(--shadow);
+    background: #fff7ef;
+  }
+  dialog::backdrop {
+    background: rgba(0,0,0,.25);
+    backdrop-filter: blur(2px);
+  }
+  .modal-body {
+    padding: 24px 24px 8px;
+  }
+  .modal-title {
+    margin: 0 0 8px;
+    font-size: 26px;
+  }
+  .credits-list {
+    margin: 0 0 8px;
+    padding-left: 18px;
+    line-height: 1.7;
+  }
+  .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 0 16px 16px;
+  }
+  .linklike {
+    border: 0;
+    background: transparent;
+    color: #5a4639;
+    font-weight: 700;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 10px 14px;
+    border-radius: 10px;
+  }
+  .linklike:focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 3px;
+  }
+
+  .footer {
+    position: absolute;
+    left: 0; right: 0; bottom: 8px;
+    text-align: center;
+    font-size: 12px;
+    opacity: .7;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  @media (max-width: 480px) {
+    .actions { grid-template-columns: 1fr; }
+  }
+
+  .falling-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10;
+    overflow: hidden;
+  }
+
+  .falling-image {
+    position: absolute;
+    user-select: none;
+    pointer-events: auto;
+    cursor: grab;
+  }
+</style>
