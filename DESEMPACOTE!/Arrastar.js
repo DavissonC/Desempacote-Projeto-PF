@@ -57,8 +57,8 @@ const estadoAtual = [{
         // Coluna 2 (2 dropzones)
         'col2-dz1': {imagens: [], tamanho: 'M'}, 'col2-dz2': {imagens: [], tamanho: 'M'},
 
-        // Coluna 3 (central - 2 dropzones)
-        'col3-dz1': {imagens: [], tamanho: 'G'}, 'col3-dz2': {imagens: [], tamanho: 'M'},
+        // Coluna 3 (central - 1 dropzone)
+        'col3-dz1': {imagens: [], tamanho: 'G'},
 
         // Coluna 4 (2 dropzones)
         'col4-dz1': {imagens: [], tamanho: 'P'}, 'col4-dz2': {imagens: [], tamanho: 'MG'},
@@ -159,7 +159,7 @@ const renderizar = (estado) => {
         armario: `
             <div class="col-container" id="col1-container">${dropzoneHtmls['col1-dz1'] || ''}${dropzoneHtmls['col1-dz2'] || ''}</div>
             <div class="col-container" id="col2-container">${dropzoneHtmls['col2-dz1'] || ''}${dropzoneHtmls['col2-dz2'] || ''}</div>
-            <div class="col-container" id="col3-container">${dropzoneHtmls['col3-dz1'] || ''}${dropzoneHtmls['col3-dz2'] || ''}</div>
+            <div class="col-container" id="col3-container">${dropzoneHtmls['col3-dz1'] || ''}}</div>
             <div class="col-container" id="col4-container">${dropzoneHtmls['col4-dz1'] || ''}${dropzoneHtmls['col4-dz2'] || ''}</div>
             <div class="col-container" id="col5-container">${dropzoneHtmls['col5-dz1'] || ''}${dropzoneHtmls['col5-dz2'] || ''}${dropzoneHtmls['col5-dz3'] || ''}${dropzoneHtmls['col5-dz4'] || ''}${dropzoneHtmls['col5-dz5'] || ''}</div>`
     };
@@ -350,3 +350,4 @@ const adicionarEventListeners = () => {
 };
 
 document.addEventListener('DOMContentLoaded', atualizarTela);
+
