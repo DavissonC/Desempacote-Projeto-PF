@@ -36,6 +36,7 @@ main {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
+
 /* Container que agrupa a imagem e o grid de dropzones do armário */
 .armario-visual-container {
     position: relative; /* Essencial para posicionar o grid #armario-dropzones-grid por cima */
@@ -155,7 +156,7 @@ main {
     width: 100%;
     height: 100%;
     display: grid;
-    grid-template-columns: 17.5% 17.5% 30% 17.5% 17.5%; /* Mantenho 1fr igual para a maioria, 1.5fr para a col5 com mais itens */
+    grid-template-columns: 17% 17.5% 30.5% 17.5% 17.5%; /* Mantenho 1fr igual para a maioria, 1.5fr para a col5 com mais itens */
     grid-template-rows: 100%; /* Uma única linha principal, os col-containers terão subgrids/flexbox */
     gap: 0; /* Não há gap entre as grandes células do grid mestre */
     padding: 0.5%; 
@@ -180,14 +181,14 @@ main {
 #col1-container {
     grid-column: 1;
     grid-row: 1; /* Todas as col-containers ficam na primeira (e única) linha do grid mestre */
-    grid-template-rows: 1fr 1fr; /* Divide a altura em 2 linhas para 2 dropzones */
+    grid-template-rows: 50.8% 49.2%; /* Divide a altura em 2 linhas para 2 dropzones */
 }
 
 /* Coluna 2 (2 dropzones) */
 #col2-container {
     grid-column: 2;
     grid-row: 1;
-    grid-template-rows: 1fr 1fr; /* Divide a altura em 2 linhas para 2 dropzones */
+    grid-template-rows: 50.8% 49.2%; /* Divide a altura em 2 linhas para 2 dropzones */
 }
 
 /* Coluna 3 (central - 2 dropzones) */
@@ -202,14 +203,14 @@ main {
 #col4-container {
     grid-column: 4;
     grid-row: 1;
-    grid-template-rows: 20% 80%; /* Divide a altura em 2 linhas para 2 dropzones */
+    grid-template-rows: 19% 81%; /* Divide a altura em 2 linhas para 2 dropzones */
 }
 
 /* Coluna 5 (mais à direita - 5 dropzones) */
 #col5-container {
     grid-column: 5;
     grid-row: 1;
-    grid-template-rows: 20% 18% 16% 18% 28%; /* Divide a altura em 5 linhas para 5 dropzones */
+    grid-template-rows: 19% 18% 17% 18% 25%; /* Divide a altura em 5 linhas para 5 dropzones */
 }
 
 
@@ -240,4 +241,24 @@ main {
 
 .imagem-arrastavel.arrastando {
     opacity: 0.3;
+}
+/* ================================================= */
+/* ESTILOS PARA O TEXTO DE RESULTADO */
+/* ================================================= */
+
+#resultado-texto {
+    font-size: 1.5em; /* Tamanho da fonte do resultado */
+    font-weight: bold;
+    color: #333;
+    background-color: #fff;
+    padding: 15px 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    transition: opacity 0.3s ease;
+}
+
+/* Classe para esconder o texto */
+#resultado-texto.hidden {
+    display: none;
 }
