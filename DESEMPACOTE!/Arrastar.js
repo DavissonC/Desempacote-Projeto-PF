@@ -1,270 +1,308 @@
+// A função organizador retorna uma lista com a quantidade de imagens encaixáveis em cada espaço
+const organizador = (fase, jogador) => {
+    return fase.filter((tamanho, indice) => {
+        if (tamanho == 'G') {
+            return jogador[indice] == 'G' || jogador[indice] == 'M' || jogador[indice] == 'P'; 
+        }
+        else if (tamanho == 'M') {
+            return jogador[indice] == 'M' || jogador[indice] == 'P';
+        }
+        else {
+            return jogador[indice] == 'P';
+        }
+    });
+}
+//Cria uma função que calcula a porcentagem de acerto do jogador, isto é, mede o quão próximo o jogador chegou de acertar a posição dos objetos.
+//Essa função será implementada na função comparador
+const porcentagem = (fase, jogador) => (jogador/fase)*100
+
+// listaNível armazena o tamanho máximo das imagens que cada drop zone pode armazenar
+const listaNivel = ['M','M','M','M','G','M','G','M','M','P','P','M'] 
+
+// Cria uma função responsável por analisar se o tamanho da lista da fase é igual ao tamanho da lista filtrada pela função 
+// organizadora, e então retorna se sim ou não.
+const comparador = (fase, jogador) => (a, ...b) => {
+    jogador = [a,...b]
+    const resultadoOrganizador = organizador(fase,jogador)
+    resultadoPorcentagem= porcentagem(fase.length, resultadoOrganizador.length)
+    if (resultadoOrganizador.length === fase.length){
+        return "Parabéns, você completou a  fase!"
+    }
+    else {return `Tente Novamente! Você está ${resultadoPorcentagem.toFixed(0)}% correto` }
+}
 // A array com o único objeto de estado dentro dela
-const estadoAtual = [{/* As informações iniciais do estado, incluindo imagens e zonas,
-                           são mantidas aqui. */
+
+//estadoAtual armazena os dados atuais da fase, ou seja, onde cada imagem está e quais as características de cada imagem
+const estadoAtual = [{
+    //"imagens" armaazena os dados das imagens
     imagens: {
-        'img1': { src: 'armário.jpg', alt: 'ArmárioGrande' }, // Corrigi o src para 'armário.jpg' para o exemplo
-        'img2': { src: 'https://png.pngtree.com/png-clipart/20230914/original/pngtree-water-jug-vector-png-image_11243534.png', alt: 'Jarro 2D' },
-        'img3': { src: 'https://via.placeholder.com/150/008000/FFFFFF?text=C' },
-        'img4': { src: 'https://via.placeholder.com/150/FFFF00/000000?text=D' },
-        'img5': { src: 'https://via.placeholder.com/90/FF6347/FFFFFF?text=E', alt: 'Caixa Laranja' },
-        'img6': { src: 'https://via.placeholder.com/70/8A2BE2/FFFFFF?text=F', alt: 'Caixa Roxa' }
+        'img1': { src: 'armário.jpg', alt: 'ArmárioGrande', tamanho: 'G' },
+        'img2': { src: 'https://png.pngtree.com/png-clipart/20230914/original/pngtree-water-jug-vector-png-image_11243534.png', alt: 'Jarro 2D', tamanho: 'M'},
+        'img3': { src: 'tênis.png', alt: 'Tênis 2D', tamanho: 'P' },
+        'img4': { src: 'roupas.png', alt: 'Roupas', tamanho: 'M' },
+        'img5': { src: 'https://via.placeholder.com/90/FF6347/FFFFFF?text=E', alt: 'Caixa Laranja', tamanho: 'P' },
+        'img6': { src: 'https://via.placeholder.com/70/8A2BE2/FFFFFF?text=F', alt: 'Caixa Roxa', tamanho: 'P' }
     },
-    // Definindo as zonas para a nova estrutura de 5 colunas
-    // A numeração das colunas no estado (col1, col2, col3, col4, col5) é da ESQUERDA para a DIREITA
-    // e corresponde DIRETAMENTE às colunas do grid CSS.
-    // Coluna 1 (Esquerda): 2 dropzones
-    // Coluna 2: 2 dropzones
-    // Coluna 3 (Central): 2 dropzones
-    // Coluna 4: 2 dropzones
-    // Coluna 5 (Direita): 5 dropzones
-
+    //"zonas" armazena os dados das  zonas (os IDs das imagens que estão em cada zona)
     zonas: {
-        'galeria': ['img1', 'img2', 'img3', 'img4', 'img5', 'img6'], // Galeria de itens arrastáveis
-        
-        // Coluna 1 (mais à esquerda - 2 dropzones)
+        'galeria': ['img1', 'img2', 'img3', 'img4', 'img5', 'img6'],
         'col1-dz1': [], 'col1-dz2': [],
-
-        // Coluna 2 (2 dropzones)
         'col2-dz1': [], 'col2-dz2': [],
-
-        // Coluna 3 (central - 2 dropzone)
-        'col3-dz1': [], 'col3-dz2': [],
-
-        // Coluna 4 (2 dropzones)
+        'col3-dz1': [],
         'col4-dz1': [], 'col4-dz2': [],
-        
-        // Coluna 5 (mais à direita - 5 dropzones)
         'col5-dz1': [], 'col5-dz2': [], 'col5-dz3': [], 'col5-dz4': [], 'col5-dz5': []
     },
+    // "imagemSendoArrastada" armazena o ID da imagem que o jogador está segurando
     imagemSendoArrastada: null,
+    // "zonaEmHover" armazena o ID da zona em que o usuário está com o cursor sobre
     zonaEmHover: null
 }];
 
-//-------------------------------------------------------------------------------------------------------------------------------------
-// Função renderizar: recebe o estado e retorna uma string HTML. Não modifica nada fora dela.
-//-------------------------------------------------------------------------------------------------------------------------------------
+// obterTamanhosAtuais mapeia o estadoAtual para saber qual o tamanho de cada imagem colocada sobre cada drop zone do *ARMÁRIO*
+const obterTamanhosAtuais = (estado) => {
+    // Define a ordem correta das drop zones para a comparação
+    const ordemDasZonas = [
+        'col1-dz1', 'col1-dz2',
+        'col2-dz1', 'col2-dz2', 
+        'col3-dz1',
+        'col4-dz1', 'col4-dz2', 
+        'col5-dz1', 'col5-dz2', 'col5-dz3', 'col5-dz4', 'col5-dz5'
+    ];
 
+    // Percorre a ordem definida e monta a lista de tamanhos
+    const listaDeTamanhos = ordemDasZonas.map(zonaId => {
+        // idDaImagem armazena o dado da imagem que está em determinada zona específica do mapeamento
+        const idDaImagem = estado.zonas[zonaId]?.[0];
+        // Se não tiver nenhuma imagem, retorna um valor nulo
+        if (!idDaImagem) {
+            return null;
+        }
+        // "imagem" armazena os dados da imagem colocada sobre a zona
+        const imagem = estado.imagens[idDaImagem];
+        // retorna o tamanho da imagem, se houver uma imagem
+        return imagem ? imagem.tamanho : null;
+    });
+
+    return listaDeTamanhos;
+};
+
+// "renderizar" transforma os dados do estadoAtual em um objeto com strings para ser usada no HTML
 const renderizar = (estado) => {
-    // Primeiro, gere o HTML de todas as dropzones individuais
+    
+    //"dropzoneHtmls" separa as imagens pertencentes a cada drop zone e organiza um objeto com as strings HTMLs corretas
     const dropzoneHtmls = Object.keys(estado.zonas).reduce((acc, zonaId) => {
-        // A zona 'galeria' é tratada separadamente, então não a incluímos no HTML do armário.
+
+        // Se a zona analisada pelo reduce for a galeria, ele segue um caminho distinto, para organizar corretamente o resuultado final
         if (zonaId === 'galeria') {
+
+            // htmlDasImagens mapeia cada imagem da galeria pelo seu ID
             const htmlDasImagensGaleria = estado.zonas[zonaId].map(imgId => {
+
+                // imagem armazena os dados da imagem que está sendo mapeada pelo ID
                 const imagem = estado.imagens[imgId];
+
+                // "classeArrastando" verifica se a imagem atual é a que está sendo arrastada e retorna a string 'arrastando' ou uma string
+                // vazia para ser usada como classe CSS
                 const classeArrastando = (estado.imagemSendoArrastada === imgId) ? 'arrastando' : '';
+
+                // retorna a string HTML para uma imagem.
                 return `<img src="${imagem.src}" alt="${imagem.alt}" id="${imgId}" class="imagem-arrastavel ${classeArrastando}" draggable="true">`;
             }).join('');
-            acc[zonaId] = `
-                <div class="drop-zone" id="${zonaId}">
-                    <h2>${zonaId.charAt(0).toUpperCase() + zonaId.slice(1).replace(/-/g, ' ')}</h2>
-                    ${htmlDasImagensGaleria}
-                </div>`;
+            // ".join()" pega o array de strings retornado pelo .map() e o transforma em uma string única
+
+            // a acumuladora armazena os dados completos da galeria e das imagens como uma string HTML e faz alguns ajustes de texto para
+            // o nome da zona (Primeira Letra em Maiúsculo) com charAt(0).toUpperCase e zonaId.slice(1).replace(/-/g, ' ')
+            acc[zonaId] = `<div class="drop-zone" id="${zonaId}"><h2>${zonaId.charAt(0).toUpperCase() + zonaId.slice(1).replace(/-/g, ' ')}</h2>${htmlDasImagensGaleria}</div>`;
+            // retorna o objeto completo, com todas a galeria processada
             return acc;
         }
-
-        // Para as dropzones do armário, geramos o HTML básico
+        // htmlDasImagens mapeia para cada drop zone, as suas respectivas imagens pelo ID
         const htmlDasImagens = estado.zonas[zonaId].map(imgId => {
+
+            // imagem armazena os dados da imagem que está sendo mapeada pelo ID
             const imagem = estado.imagens[imgId];
+
+            // "classeArrastando" verifica se a imagem atual é a que está sendo arrastada e retorna a string 'arrastando' ou uma string
+            // vazia para ser usada como classe CSS
             const classeArrastando = (estado.imagemSendoArrastada === imgId) ? 'arrastando' : '';
+
+              // retorna a string HTML para uma imagem.
             return `<img src="${imagem.src}" alt="${imagem.alt}" id="${imgId}" class="imagem-arrastavel ${classeArrastando}" draggable="true">`;
         }).join('');
+        // ".join()" pega o array de strings retornado pelo .map() e o transforma em uma string única
 
-        acc[zonaId] = `
-            <div class="drop-zone" id="${zonaId}">
-                <h2>${zonaId.charAt(0).toUpperCase() + zonaId.slice(1).replace(/-/g, ' ')}</h2>
-                ${htmlDasImagens}
-            </div>`;
+        // a acumuladora armazena os dados completos das imagens como uma string HTML e faz alguns 
+        // ajustes de texto (Primeira Letra em Maiúsculo) para o nome da zona com charAt(0).toUpperCase e zonaId.slice(1).replace(/-/g, ' ')
+        acc[zonaId] = `<div class="drop-zone" id="${zonaId}"><h2>${zonaId.charAt(0).toUpperCase() + zonaId.slice(1).replace(/-/g, ' ')}</h2>${htmlDasImagens}</div>`;
+        // retorna o objeto completo, com todas as zonas processadas
         return acc;
     }, {});
-
-    // Monta o HTML final para cada contêiner principal (galeria e armário)
+    // a função retorna, no final, um registro de cada zona principal, galeria e armário, e no armário, divide corretamente cada 
+    // dado de cada drop zone em seu conteiner/coluna 
     return {
-        galeria: dropzoneHtmls.galeria, // HTML para a galeria (fora do armário)
+        galeria: dropzoneHtmls.galeria,
         armario: `
-            <div class="col-container" id="col1-container">
-                ${dropzoneHtmls['col1-dz1'] || ''}
-                ${dropzoneHtmls['col1-dz2'] || ''}
-            </div>
-
-            <div class="col-container" id="col2-container">
-                ${dropzoneHtmls['col2-dz1'] || ''}
-                ${dropzoneHtmls['col2-dz2'] || ''}
-            </div>
-
-            <div class="col-container" id="col3-container">
-                ${dropzoneHtmls['col3-dz1'] || ''}
-            </div>
-
-            <div class="col-container" id="col4-container">
-                ${dropzoneHtmls['col4-dz1'] || ''}
-                ${dropzoneHtmls['col4-dz2'] || ''}
-            </div>
-            
-            <div class="col-container" id="col5-container">
-                ${dropzoneHtmls['col5-dz1'] || ''}
-                ${dropzoneHtmls['col5-dz2'] || ''}
-                ${dropzoneHtmls['col5-dz3'] || ''}
-                ${dropzoneHtmls['col5-dz4'] || ''}
-                ${dropzoneHtmls['col5-dz5'] || ''}
-            </div>
-        `
+            <div class="col-container" id="col1-container">${dropzoneHtmls['col1-dz1'] || ''}${dropzoneHtmls['col1-dz2'] || ''}</div>
+            <div class="col-container" id="col2-container">${dropzoneHtmls['col2-dz1'] || ''}${dropzoneHtmls['col2-dz2'] || ''}</div>
+            <div class="col-container" id="col3-container">${dropzoneHtmls['col3-dz1'] || ''}${dropzoneHtmls['col3-dz2'] || ''}</div>
+            <div class="col-container" id="col4-container">${dropzoneHtmls['col4-dz1'] || ''}${dropzoneHtmls['col4-dz2'] || ''}</div>
+            <div class="col-container" id="col5-container">${dropzoneHtmls['col5-dz1'] || ''}${dropzoneHtmls['col5-dz2'] || ''}${dropzoneHtmls['col5-dz3'] || ''}${dropzoneHtmls['col5-dz4'] || ''}${dropzoneHtmls['col5-dz5'] || ''}</div>`
     };
 };
 
-//-------------------------------------------------------------------------------------------------------------------------------------
-// As funções abaixo recebem o estado antigo e retornam, em conjunto, um novo estado atualizado
-//-------------------------------------------------------------------------------------------------------------------------------------
+// Funções que fazem as alterações de estado na fase
+const iniciarArrastar = (estado, idDaImagem) => ({ ...estado, imagemSendoArrastada: idDaImagem });
 
-const iniciarArrastar = (estado, idDaImagem) => {
-    return { ...estado, imagemSendoArrastada: idDaImagem };
-};
-
-const finalizarArrastar = (estado) => {
-    return { ...estado, imagemSendoArrastada: null, zonaEmHover: null };
-};
+const finalizarArrastar = (estado) => ({ ...estado, imagemSendoArrastada: null, zonaEmHover: null });
 
 const moverImagem = (estado, idDaZonaDestino) => {
-    // Salva o ID da imagem que está sendo arrastada para um uso posterior
+    // Coleta o ID da imagem que está sendo arrastada
     const idDaImagem = estado.imagemSendoArrastada;
-
-    // Se não houver uma imagem sendo arrastada, retorna o estado atual sem modificação
+    // Verifica se há uma imagem sendo arrastada (se o valor não é nulo)
     if (!idDaImagem) return estado;
-
-    // Pega as chaves do objeto de zonas original
+    // Armazena as chaves das zonas do estadoAtual
     const chavesDasZonas = Object.keys(estado.zonas);
-
-    // zonasAtualizadas usa chavesDasZonas.reduce() para construir um novo objeto de zonas do zero
+    // Atualiza as zonas para que, após a transferência de uma imagem para uma zona diferente, seus dados sumam da anterior e apareçam na nova
     const zonasAtualizadas = chavesDasZonas.reduce((acc, zonaId) => {
-        // 'acc' é a nossa 'variável acumuladora'
-        // 'zonaId' é a chave atual (ex: 'galeria', 'col1-dz1')
-
-        // 1. Remove a imagem da zona atual (se ela estiver lá)
+        // Para a 'zonaId' atual, cria um novo array 'imagensNaZona' contendo todos os IDs, exceto o da imagem que está sendo arrastada.
         const imagensNaZona = estado.zonas[zonaId].filter(id => id !== idDaImagem);
-
-        // 2. Adiciona a imagem se a zona de destino for a correta
+        // Verifica se a zona em análise é a zona de destino
         if (zonaId === idDaZonaDestino) {
-            // ** Lógica de "apenas um item por drop-zone" **
-            // A zona 'galeria' é uma EXCEÇÃO: ela aceita múltiplos itens.
-            // Contêineres de coluna (`colX-container`) não devem aceitar itens diretos.
+            // Lógica para impedir que um item seja solto em uma zona já ocupada (a 'galeria' é a exceção)
             if (zonaId.includes('-container') || (zonaId !== 'galeria' && imagensNaZona.length > 0)) {
-                console.warn(`Zona '${zonaId}' já está ocupada ou é um contêiner. Não é possível mover '${idDaImagem}'.`);
-                // Retorna o acumulador sem adicionar a imagem a esta zona
-                acc[zonaId] = imagensNaZona; 
-            } else {
+                acc[zonaId] = imagensNaZona;
+            } 
+            //Senão, cria um novo array para a zona de destino, contendo as imagens que já estavam lá mais a nova imagem
+            else {
                 acc[zonaId] = [...imagensNaZona, idDaImagem];
             }
         } else {
             acc[zonaId] = imagensNaZona;
         }
-
-        // 3. Retorna o objeto acumulador para a próxima iteração
         return acc;
-    }, {}); // O {} no final é o valor inicial do nosso acumulador (um objeto vazio)
-
-    // Retorna o novo estado completo com o objeto de zonas totalmente novo
+    }, {});
+    // A função retorna um novo objeto estadoAtual com as zonas atualizadas
     return { ...estado, zonas: zonasAtualizadas };
 };
 
-//----------------------------------------------------------------------------------------------------------------------------------
-// Parte não funcional, necessária para o funcionamento do arraste
-//----------------------------------------------------------------------------------------------------------------------------------
+//_______________________________________________________________________________________
+//Parte Impura do Código!!!
+//_______________________________________________________________________________________
 
-// galeriaContainer armazena o elemento HTML para a galeria (fora do armário)
+//galeriaContainer armazena os dados do container da galeria
 const galeriaContainer = document.getElementById('app-galeria');
-// armarioDropzonesGrid armazena o elemento HTML que será o grid mestre para as dropzones do armário
+
+//armarioDropzonesGrid armazena os dados dos grids do container das dropzones
 const armarioDropzonesGrid = document.getElementById('armario-dropzones-grid');
- 
-// atualizarTela é a responsável por atualizar as informações presentes na tela após qualquer mudança
+
+//atualizarTela atualiza os dados do arquivo HTML de acordo com o estadoAtual
 const atualizarTela = () => {
-
-    // htmlPorZona armazena a string gerada pela função renderizar, para todas as zonas
     const htmlPorZona = renderizar(estadoAtual[0]);
-    
-    // Atualiza a galeria (parte fora do armário)
-    if (galeriaContainer) {
-        galeriaContainer.innerHTML = htmlPorZona.galeria;
-    }
 
-    // Atualiza o grid do armário com todas as dropzones geradas para o armário
-    if (armarioDropzonesGrid) {
-        armarioDropzonesGrid.innerHTML = htmlPorZona.armario;
-    }
-    
-    // A chamada para adicionar os eventos PRECISA estar DENTRO da função
-    // que redesenha a tela, para ser executada toda vez.
+    //atualiza os dados do container da galeria
+    if (galeriaContainer) galeriaContainer.innerHTML = htmlPorZona.galeria;
+
+    //atualiza os dados dos grids do container do armário
+    if (armarioDropzonesGrid) armarioDropzonesGrid.innerHTML = htmlPorZona.armario;
+
+    //ativa a função adicionarEventListeners
     adicionarEventListeners(); 
 };
-
-// adicionarEventListeners 'computa' todas as mudanças que o usuário for fazer na tela
+//adicionarEventListeners cria uma função que atualiza o estado atual com eventListeners(método que ativa uma função assim que um evento
+// for acionado na tela)
 const adicionarEventListeners = () => {
-    // querySelectorAll seleciona todas as imagens arrastáveis e, para cada uma, adiciona os eventListeners necessários
+    
+    // Pega o ID do novo elemento de texto do resultado produzido pela função comparador (lá do começo do código)
+    const resultadoTexto = document.getElementById('resultado-texto');
+
+    // Para cada imagem arrastável, verifica se acontece algum dos eventos abaixo e ativa a função necessária
     document.querySelectorAll('.imagem-arrastavel').forEach(imagem => {
+        
+        //'dragstart'= início do arraste
         imagem.addEventListener('dragstart', (e) => {
-            // Atualiza o estado da imagem clicada para imagemSendoArrastada
-            const novoEstado = iniciarArrastar(estadoAtual[0], e.target.id);
-            // Atualiza o estado atual
-            estadoAtual[0] = novoEstado;
-            // setTimeout pede para que a função seja retornada o mais rápido possível, contanto que o navegador já tenha terminado
-            // suas tarefas antecedentes, garante que a aparência do elemento original só seja alterada depois que o navegador já 
-            // tenha preparado a imagem de arraste
+            // Esconde a mensagem de resultado anterior assim que um novo arraste começa
+            if (resultadoTexto) {
+                resultadoTexto.classList.add('hidden');
+            }
+            // Ativa a função iniciarArrastar para a imagem clicada
+            estadoAtual[0] = iniciarArrastar(estadoAtual[0], e.target.id);
+            // Assim que possível, adiciona a classe arrastando à imagem clicada
             setTimeout(() => e.target.classList.add('arrastando'), 0); 
         });
-        // Indica a finalização do arraste
+
+        //'dragend' = fim do arraste
         imagem.addEventListener('dragend', (e) => {
+            // Remove a classe arrastando da imagem clicada
+            e.target.classList.remove('arrastando');
+            // Ativa a função finalizarArrastar para a imagem clicada
             estadoAtual[0] = finalizarArrastar(estadoAtual[0]);
-            e.target.classList.remove('arrastando'); // Remove a classe 'arrastando' diretamente
-            atualizarTela(); // A tela será redesenhada para refletir a nova posição se houver drop
+            // atualiza o arquivo 
+            atualizarTela();
         });
     });
 
-    // querySelectorAll() faz, para cada zona, as tarefas abaixo
+    // Para cada drop zone, verifica se acontece algum dos eventos abaixo e ativa a função necessária
     document.querySelectorAll('.drop-zone').forEach(zona => {
-        // dragover significa que a imagem que está sendo arrastada está sobre essa zona em específico
+
+        //'dragover' = cursor segurando uma imagem sobre determinada zona
         zona.addEventListener('dragover', (e) => {
-            // preventDefault previne que apareça um sinal de bloqueado no cursor quando a imagem estiver sobre uma drop zone
+
+            // Previne que apareça um sinal de bloqueado indesejado sobre a zona
             e.preventDefault();
-            
-            // ** Validação para feedback visual: só adiciona drag-over se a zona for 'galeria' ou não estiver ocupada **
-            // E não permite drag-over em contêineres de coluna (.col-container), pois eles não são zonas de drop para itens.
-            if (zona.id === 'galeria' || estadoAtual[0].zonas[e.currentTarget.id].length === 0) { 
-                if (!zona.id.includes('-container')) { // Certifica que não é um container de coluna
+
+            // Se a drop zone for a galeria ou a quantidade de imagens na zona for 0, e o id da zona possuir '-container',
+            // adiciona a classe 'drag-over' à zona
+            if (zona.id === 'galeria' || estadoAtual[0].zonas[e.currentTarget.id]?.length === 0) {
+                if (!zona.id.includes('-container')) {
                     e.currentTarget.classList.add('drag-over');
-                    e.dataTransfer.dropEffect = 'move'; // Indica que é um local válido para soltar
-                } else {
-                    e.dataTransfer.dropEffect = 'none'; // Contêineres não aceitam drop direto de itens
                 }
-            } else {
-                e.dataTransfer.dropEffect = 'none'; // Indica que NÃO é um local válido para soltar
             }
         });
-        
-        // dragleave significa que o cursor saiu da drop zone
+
+        //'dragleave' = cursor segurando uma imagem sai de determinada zona
         zona.addEventListener('dragleave', (e) => {
             e.currentTarget.classList.remove('drag-over');
         });
 
-        // drop significa que o objeto foi solto em uma drop zone
+        //'drop' = cursor solta uma imagem sobre determinada zona
         zona.addEventListener('drop', (e) => {
-            e.preventDefault();
-            e.currentTarget.classList.remove('drag-over'); // Limpa o hover
 
-            // ** Validação final de drop: move se for 'galeria' ou se a zona não estiver ocupada **
-            // E não permite drop em zonas que são apenas contêineres de colunas.
-            if (zona.id === 'galeria' || (!zona.id.includes('-container') && estadoAtual[0].zonas[e.currentTarget.id].length === 0)) { 
-                // estadoAposMover atualiza o 'estadoAtual' para o estado atual
+            // evita que a imagem não seja colocada
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-over');
+
+            // Se a zona for a galeria ou não conter 'container' no id e a quantidade de imagens na dropzone seja 0,
+            // Aplica a função finalizarArrastar com parâmetro(estadoAposMover)
+            // Senão, aplica a função finalizarArrastar com parâmetro(estadoAtual[0])
+            if (zona.id === 'galeria' || (!zona.id.includes('-container') && estadoAtual[0].zonas[e.currentTarget.id]?.length === 0)) {
                 const estadoAposMover = moverImagem(estadoAtual[0], e.currentTarget.id);
                 estadoAtual[0] = finalizarArrastar(estadoAposMover);
-            } 
-            else {
-                console.warn(`Tentou mover para a zona '${e.currentTarget.id}', mas ela já está ocupada ou é um contêiner.`);
-                // Poderia adicionar um feedback visual (ex: uma mensagem de erro temporária) aqui
-                estadoAtual[0] = finalizarArrastar(estadoAtual[0]); // Limpa o estado de arrasto
+            } else {
+                estadoAtual[0] = finalizarArrastar(estadoAtual[0]);
             }
-            
-            atualizarTela(); // Sempre redesenha para refletir qualquer mudança (ou falta dela)
+            //Atualiza os dados do arquivo
+            atualizarTela();
         });
     });
+
+    // Lógica do botão "Verificar"
+
+    //Pega o elemento verificar pelo ID
+    const botaoVerificar = document.getElementById('verificar-btn');
+
+    // Verifica se o botão foi clicado e ativa a função comparador, para depois imprimir o resultado na tela
+    if (botaoVerificar) {
+        botaoVerificar.addEventListener('click', () => {
+            const listaJogador = obterTamanhosAtuais(estadoAtual[0]);
+            const resultado = comparador(listaNivel, [])(...listaJogador);
+            
+            // Em vez de alert(), mostra o texto na tela
+            if (resultadoTexto) {
+                resultadoTexto.textContent = resultado;
+                resultadoTexto.classList.remove('hidden');
+            }
+        });
+    }
 };
 
-// atualizarTela() é usado aqui para fazer o primeiro movimento do código
 document.addEventListener('DOMContentLoaded', atualizarTela);
