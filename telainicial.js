@@ -201,7 +201,7 @@ setInterval(() => {
 // Listener para o botão "Jogar".
 //Agora, o jogador será redirecionado para o espaço de jogo
 playBtn.addEventListener('click', () => {
-  window.location.href = 'Arrastar.html';
+  window.location.href = 'https://raw.githubusercontent.com/DavissonC/Desempacote-Projeto-PF/refs/heads/main/DESEMPACOTE!/Arrastar.html';
 });
 
 // Listener para o botão "Créditos" que abre o modal.
