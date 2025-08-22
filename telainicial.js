@@ -199,8 +199,9 @@ setInterval(() => {
 // ===============================================
 
 // Listener para o botão "Jogar".
+//Agora, o jogador será redirecionado para o espaço de jogo
 playBtn.addEventListener('click', () => {
-  alert('Iniciar jogo… (COLOCAR O CODIGO DO JOGO AQUI)');
+  window.location.href = 'Arrastar.html';
 });
 
 // Listener para o botão "Créditos" que abre o modal.
