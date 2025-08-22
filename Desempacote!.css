@@ -1,6 +1,9 @@
 body {
     font-family: system-ui, sans-serif;
-    background-color: #333;
+    background-image: url(foto.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-color: #252B4F;
     margin: 0;
     display: flex;
     
@@ -19,6 +22,7 @@ h1 {
     text-align: center;
     color: aliceblue;
     margin-bottom: 20px;
+    text-shadow: 0 0 15px #2e2e2e;
 }
 
 /* Novo container principal para o layout com Flexbox */
@@ -32,7 +36,7 @@ main {
     max-width: 1200px; /* Limite a largura para melhor controle */
     margin: 20px auto; /* Adiciona margem superior e inferior, e centraliza horizontalmente */
     background-color: #fff;
-    border-radius: 10px;
+    border-radius: 30px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
@@ -125,6 +129,7 @@ main {
     display: flex;
     flex-direction: column;
     gap: 15px;
+    box-shadow: 0 0 10px #333;
     
 }
 
@@ -310,3 +315,4 @@ main {
 #resultado-texto.hidden {
     display: none;
 }
+
