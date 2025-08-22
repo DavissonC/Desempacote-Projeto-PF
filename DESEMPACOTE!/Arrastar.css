@@ -46,6 +46,7 @@ main {
     border-radius: 10px;
     overflow: hidden; /* Garante que nada vaze para fora */
     background-color: #eee; /* Cor de fundo para caso a imagem não carregue */
+    box-shadow: 0 0 15px rgba(57, 48, 39, 0.588);
 }
 
 /* A imagem de fundo real do armário */
@@ -115,7 +116,8 @@ main {
 #app-galeria {
     width: 300px;
     min-height: 500px;
-    background-color: #ffffff;
+    background-image: url(TexturaMadeira.jpg);
+    background-size: 120%;
     box-sizing: border-box;
     padding: 20px;
     border-radius: 10px;
@@ -123,13 +125,15 @@ main {
     display: flex;
     flex-direction: column;
     gap: 15px;
+    
 }
 
 #galeria.drop-zone {
     width: 100%;
+    box-shadow: 1px 1px 15px rgba(57, 48, 39, 0.588);
     min-height: 400px;
-    border: 2px dashed #a0a0a0;
-    background-color: #f9f9f9;
+    background-image: url(TexturaMadeira2.jpg);
+    background-size: 80%;
     align-content: flex-start;
     padding: 10px;
     flex-grow: 1; /* Permite que a galeria preencha o espaço vertical disponível */
@@ -212,7 +216,15 @@ main {
     grid-row: 1;
     grid-template-rows: 19% 18% 17% 18% 25%; /* Divide a altura em 5 linhas para 5 dropzones */
 }
+/* ================================================= */
+/* TAMANHOS ESPECÍFICOS POR LOCAL                    */
+/* ================================================= */
 
+/* Na galeria, todas as imagens terão um tamanho grande e uniforme para facilitar a visualização */
+#galeria .imagem-arrastavel {
+    width: 120px;
+    height: 120px;
+}
 
 /* ================================================= */
 /* POSICIONAMENTO DAS DROPZONES REAIS DENTRO DE SEUS CONTÊINERES DE COLUNA */
@@ -230,15 +242,40 @@ main {
 
 /* Estilos para as imagens arrastáveis (dentro das dropzones) */
 .imagem-arrastavel {
-    width: 120px; /* Tamanho padrão das imagens arrastáveis */
-    height: 120px;
+    
     object-fit: contain; /* Para que a imagem caiba sem cortar */
     border-radius: 5px;
     cursor: grab;
     transition: opacity 0.2s ease-in-out;
     /* Certifica que as imagens não bloqueiam eventos de arrastar/soltar das dropzones */ 
 }
+/* ================================================= */
+/* TAMANHOS DAS IMAGENS ARRASTÁVEIS POR CLASSE       */
+/* ================================================= */
 
+/* Tamanho Pequeno (P) */
+.imagem-arrastavel.tamanho-p {
+    width: 120px;
+    height: 120px;
+}
+
+/* Tamanho Médio (M) */
+.imagem-arrastavel.tamanho-m {
+    width: 120px;
+    height: 120px;
+}
+
+/* Tamanho Médio-Grande (MG) */
+.imagem-arrastavel.tamanho-mg {
+    width: 320px;
+    height: 320px;
+}
+
+/* Tamanho Grande (G) */
+.imagem-arrastavel.tamanho-g {
+    width: 320px;
+    height: 320px;
+}
 .imagem-arrastavel.arrastando {
     opacity: 0.3;
 }
