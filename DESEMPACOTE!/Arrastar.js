@@ -39,17 +39,18 @@ const comparador = (fase, jogador) => (a, ...b) => {
 const estadoAtual = [{
     //"imagens" armaazena os dados das imagens
     imagens: {
-        'img1': { src: 'armário.jpg', alt: 'ArmárioGrande', tamanho: 'G' },
-        'img2': { src: 'https://png.pngtree.com/png-clipart/20230914/original/pngtree-water-jug-vector-png-image_11243534.png', alt: 'Jarro 2D', tamanho: 'MG'},
-        'img3': { src: 'tênis.png', alt: 'Tênis 2D', tamanho: 'P' },
-        'img4': { src: 'roupas.png', alt: 'Roupas', tamanho: 'M' },
-        'img5': { src: 'https://via.placeholder.com/90/FF6347/FFFFFF?text=E', alt: 'Caixa Laranja', tamanho: 'P' },
-        'img6': { src: 'https://via.placeholder.com/70/8A2BE2/FFFFFF?text=F', alt: 'Caixa Roxa', tamanho: 'P' }
+        'img1': { src: 'Pelúcias.png', alt: 'Pelúcias', tamanho: 'G' },
+        'img2': { src: 'Cosmético1.png', alt: 'Cosmético', tamanho: 'P'},
+        'img3': { src: 'caixas.png', alt: 'Caixas', tamanho: 'MG' },
+        'img4': { src: 'roupas.png', alt: 'Roupas', tamanho: 'P' },
+        'img5': { src: 'panos.png', alt: 'Panos', tamanho: 'M' },
+        'img6': { src: 'FerroDePassar.png', alt: 'Ferro 2D', tamanho: 'P' },
+        'img7': { src: 'Livros.png', alt: 'Cosmético', tamanho: 'P'}
     },
     //"zonas" armazena os dados das  zonas (os IDs das imagens que estão em cada zona)
     // Adicionei a propriedade 'tamanho' para cada dropzone, além disso, a propriedade 'imagens' agora é uma lista
     zonas: {
-        'galeria': {imagens: ['img1', 'img2', 'img3', 'img4', 'img5', 'img6'], tamanho: 'G'}, // Galeria tem um tamanho 'G' para aceitar tudo
+        'galeria': {imagens: ['img1', 'img2', 'img3', 'img4', 'img5', 'img6', 'img7'], tamanho: 'G'}, // Galeria tem um tamanho 'G' para aceitar tudo
         
         // Coluna 1 (mais à esquerda - 2 dropzones)
         'col1-dz1': {imagens: [], tamanho: 'M'}, 'col1-dz2': {imagens: [], tamanho: 'M'},
@@ -125,7 +126,7 @@ const renderizar = (estado) => {
                 // vazia para ser usada como classe CSS
                 const classeArrastando = (estado.imagemSendoArrastada === imgId) ? 'arrastando' : '';
                 // retorna a string HTML para uma imagem.
-                return `<img src="${imagem.src}" alt="${imagem.alt}" id="${imgId}" class="imagem-arrastavel ${classeArrastando}" draggable="true">`;
+               return `<img src="${imagem.src}" alt="${imagem.alt}" id="${imgId}" class="imagem-arrastavel tamanho-${imagem.tamanho.toLowerCase()} ${classeArrastando}" draggable="true">`;
             }).join('');
             // ".join()" pega o array de strings retornado pelo .map() e o transforma em uma string única
             // a acumuladora armazena os dados completos da galeria e das imagens como uma string HTML e faz alguns ajustes de texto para
@@ -143,7 +144,7 @@ const renderizar = (estado) => {
             // vazia para ser usada como classe CSS
             const classeArrastando = (estado.imagemSendoArrastada === imgId) ? 'arrastando' : '';
              // retorna a string HTML para uma imagem.
-            return `<img src="${imagem.src}" alt="${imagem.alt}" id="${imgId}" class="imagem-arrastavel ${classeArrastando}" draggable="true">`;
+           return `<img src="${imagem.src}" alt="${imagem.alt}" id="${imgId}" class="imagem-arrastavel tamanho-${imagem.tamanho.toLowerCase()} ${classeArrastando}" draggable="true">`;
         }).join('');
         // ".join()" pega o array de strings retornado pelo .map() e o transforma em uma string única
         // a acumuladora armazena os dados completos das imagens como uma string HTML e faz alguns 
@@ -159,7 +160,7 @@ const renderizar = (estado) => {
         armario: `
             <div class="col-container" id="col1-container">${dropzoneHtmls['col1-dz1'] || ''}${dropzoneHtmls['col1-dz2'] || ''}</div>
             <div class="col-container" id="col2-container">${dropzoneHtmls['col2-dz1'] || ''}${dropzoneHtmls['col2-dz2'] || ''}</div>
-            <div class="col-container" id="col3-container">${dropzoneHtmls['col3-dz1'] || ''}}</div>
+            <div class="col-container" id="col3-container">${dropzoneHtmls['col3-dz1'] || ''}</div>
             <div class="col-container" id="col4-container">${dropzoneHtmls['col4-dz1'] || ''}${dropzoneHtmls['col4-dz2'] || ''}</div>
             <div class="col-container" id="col5-container">${dropzoneHtmls['col5-dz1'] || ''}${dropzoneHtmls['col5-dz2'] || ''}${dropzoneHtmls['col5-dz3'] || ''}${dropzoneHtmls['col5-dz4'] || ''}${dropzoneHtmls['col5-dz5'] || ''}</div>`
     };
@@ -350,4 +351,3 @@ const adicionarEventListeners = () => {
 };
 
 document.addEventListener('DOMContentLoaded', atualizarTela);
-
