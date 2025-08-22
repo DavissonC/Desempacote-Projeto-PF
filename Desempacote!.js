@@ -288,6 +288,7 @@ const adicionarEventListeners = () => {
             estadoAtual[0] = iniciarArrastar(estadoAtual[0], e.target.id, idZonaOrigem); // Passa a idZonaOrigem
             // Assim que possível, adiciona a classe 'arrastando' à imagem clicada
             setTimeout(() => e.target.classList.add('arrastando'), 0); 
+            document.getElementById('pegar').play()
         });
 
         //'dragend' = fim do arraste
@@ -335,6 +336,7 @@ const adicionarEventListeners = () => {
                 // Se o encaixe for válido, move a imagem
                 const estadoAposMover = moverImagem(estadoAtual[0], idZonaDestino);
                 estadoAtual[0] = finalizarArrastar(estadoAposMover);
+                document.getElementById('soltar').play()
             } else {
                 // Se o encaixe não for válido, devolve a imagem para a zona de origem (guardada anteriormente)
                 // moverImagem é utilizada para levar a imagem de volta para a origem.
@@ -365,3 +367,26 @@ const adicionarEventListeners = () => {
 };
 
 document.addEventListener('DOMContentLoaded', atualizarTela);
+document.addEventListener('DOMContentLoaded', () => {
+    const musica = document.getElementById('trilha-sonora');
+    
+    // Define um volume inicial (0.3 = 30% do volume)
+    musica.volume = 0.3;
+
+    // Função que será chamada no primeiro clique
+    const iniciarMusicaComInteracao = () => {
+        // Verifica se a música já não está tocando
+        if (musica.paused) {
+            musica.play().catch(error => {
+                // O .catch() é uma boa prática para lidar com possíveis erros de reprodução
+                console.log("Erro ao tentar tocar a música:", error);
+            });
+        }
+        
+        // Remove o eventListener para que cliques futuros não tentem tocar a música novamente
+        document.removeEventListener('click', iniciarMusicaComInteracao);
+    };
+
+    // Adiciona um eventListener que espera por um clique em qualquer lugar do documento
+    document.addEventListener('click', iniciarMusicaComInteracao);
+});
