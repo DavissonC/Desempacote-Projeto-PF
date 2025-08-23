@@ -116,7 +116,7 @@ main {
     opacity: 1; /* Rótulo visível quando ocupado */
 }
 
-/* A zona da galeria (o contêiner #app-galeria e a drop-zone #galeria) */
+/* A zona da galeria (o contêiner #app-galeria) */
 #app-galeria {
     width: 300px;
     min-height: 500px;
@@ -127,24 +127,30 @@ main {
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     display: flex;
-    flex-direction: column;
-    gap: 15px;
+    flex-direction: row;
+    gap: 0;
     box-shadow: 0 0 10px #333;
-    
 }
 
-#galeria.drop-zone {
+.galeria-coluna {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.galeria-coluna .drop-zone {
     width: 100%;
-    box-shadow: 1px 1px 15px rgba(57, 48, 39, 0.588);
     min-height: 400px;
     background-image: url(TexturaMadeira2.jpg);
     background-size: 80%;
-    align-content: flex-start;
     padding: 10px;
-    flex-grow: 1; /* Permite que a galeria preencha o espaço vertical disponível */
+    flex-grow: 1;
+    border-radius: 0;
 }
 
-#galeria.drop-zone h2 {
+.galeria-coluna .drop-zone h2 {
     position: static;
     background-color: transparent;
     color: #333;
@@ -154,6 +160,8 @@ main {
     padding: 0;
     margin-bottom: 10px;
 }
+
+
 
 /* ================================================= */
 /* GRID MESTRE PARA AS DROPZONES DO ARMÁRIO */
@@ -205,11 +213,12 @@ main {
     grid-column: 3;
     grid-row: 1;
     grid-template-rows: 59.5% 9% 9.1% 9.5% 9.4%; /* ALTERADO AQUI: Agora divide a altura em 5 linhas para as 5 dropzones */
-
 }
+
 #col3-dz2, #col3-dz3, #col3-dz4, #col3-dz5 {
     opacity: 0;
 }
+
 #col3-dz2.drop-zone.drag-over, #col3-dz3.drop-zone.drag-over, #col3-dz4.drop-zone.drag-over, #col3-dz5.drop-zone.drag-over {
     opacity: 1;
 }
@@ -226,15 +235,6 @@ main {
     grid-column: 5;
     grid-row: 1;
     grid-template-rows: 19% 18% 17% 18% 25%; /* Divide a altura em 5 linhas para 5 dropzones */
-}
-/* ================================================= */
-/* TAMANHOS ESPECÍFICOS POR LOCAL                    */
-/* ================================================= */
-
-/* Na galeria, todas as imagens terão um tamanho grande e uniforme para facilitar a visualização */
-#galeria .imagem-arrastavel {
-    width: 120px;
-    height: 120px;
 }
 
 /* ================================================= */
@@ -253,7 +253,6 @@ main {
 
 /* Estilos para as imagens arrastáveis (dentro das dropzones) */
 .imagem-arrastavel {
-    
     object-fit: contain; /* Para que a imagem caiba sem cortar */
     border-radius: 5px;
     cursor: grab;
@@ -288,12 +287,17 @@ main {
     height: 320px;
 }
 /* Tamanho Extra Grande (GG) */
-.imagem-arrastavel.imagem-arrastavel.tamanho-gg{
+.imagem-arrastavel.tamanho-gg{
     width: 320px;
     height: 320px;
 }
 .imagem-arrastavel.arrastando {
     opacity: 0.3;
+}
+.imagem-arrastavel:hover { transform: scale(1.1); }
+.galeria-coluna .imagem-arrastavel {
+    width: 120px;
+    height: 120px;
 }
 /* ================================================= */
 /* ESTILOS PARA O TEXTO DE RESULTADO */
@@ -315,4 +319,84 @@ main {
 #resultado-texto.hidden {
     display: none;
 }
+#verificar-btn:hover{
+    background-color: aquamarine;
+    transform: scale(1.1);
+}
+#verificar-btn:active{
+    background-color: aqua;
+    transform: scale(0.9);
+}
+@keyframes drop-animation {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
 
+.animate-drop {
+    animation: drop-animation 0.2s ease-in-out; /* Duração de 0.2 segundos com efeito ease-in-out */
+}
+/* ================================================= */
+/* EFEITO DE PARTÍCULAS (BRILHO)                     */
+/* ================================================= */
+
+.particula-brilho {
+    position: fixed; /* Usa 'fixed' para se posicionar em relação à janela */
+    width: 8px;
+    height: 8px;
+    background-color: #FFD700; /* Cor de ouro/brilho */
+    border-radius: 50%;
+    pointer-events: none; /* Garante que as partículas não interfiram com cliques */
+    z-index: 2000; /* Garante que fiquem por cima de tudo */
+    
+    /* Aplica a animação que definimos abaixo */
+    animation: brilho-animacao 1s forwards;
+}
+
+@keyframes brilho-animacao {
+    from {
+        opacity: 1;
+        transform: scale(1) translate(0, 0);
+    }
+    to {
+        opacity: 0;
+        /* Usa variáveis CSS que serão definidas pelo JavaScript para um movimento aleatório */
+        transform: scale(0) translate(var(--x), var(--y));
+    }
+}
+/* ================================================= */
+/* EFEITO DE CONFETES AO VENCER                      */
+/* ================================================= */
+
+.confete {
+    position: fixed;
+    /* Começa fora da tela, no topo */
+    top: -35px; 
+    width: 10px;
+    height: 30px;
+    opacity: 1;
+    pointer-events: none; /* Garante que não interfiram com cliques */
+    z-index: 3000; /* Garante que fiquem por cima de tudo */
+    
+    /* Aplica a animação de queda que definimos abaixo */
+    animation: cair-confete 5s linear forwards;
+}
+
+@keyframes cair-confete {
+    from {
+        /* Começa no topo, sem rotação */
+        transform: translateY(0) rotateZ(0);
+        opacity: 1;
+    }
+    to {
+        /* Termina bem abaixo da tela, com uma rotação para dar efeito de "rodopio" */
+        transform: translateY(110vh) rotateZ(720deg);
+        opacity: 0;
+    }
+}
