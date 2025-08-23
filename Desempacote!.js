@@ -48,7 +48,7 @@ const estadoAtual = [{
         'img4': { src: 'roupas.png', alt: 'Roupas', tamanho: 'P' },
         'img5': { src: 'panos.png', alt: 'Panos', tamanho: 'M' },
         'img6': { src: 'FerroDePassar.png', alt: 'Ferro 2D', tamanho: 'P' },
-        'img7': { src: 'Livros.png', alt: 'Cosmético', tamanho: 'P'},
+        'img7': { src: 'Livros.png', alt: 'Livro', tamanho: 'P'},
         'img8': { src: 'bone-capivara.png', alt: 'Boné de capivara', tamanho: 'P'},
         'img9': { src: 'mochila.png', alt:'Mochila', tamanho:'MG'},
         'img10': { src: 'roupasdobradas.png', alt:'Roupas dobradas', tamanho:'MG'},
@@ -57,13 +57,30 @@ const estadoAtual = [{
         'img13': { src: 'cueca.png', alt:'Cueca', tamanho:'P'},
         'img14': { src: 'espelho.png', alt:'Espelho', tamanho:'MG'},
         'img15': { src: 'fone.png', alt:'Fone', tamanho:'P'},
-        'img16': { src: 'tenis.png', alt:'Tenis', tamanho:'MG'}
+        'img16': { src: 'tenis.png', alt:'Tenis', tamanho:'P'},
+        'img17': { src: 'roupas1.png', alt: 'Roupas', tamanho: 'P' },
+        'img18': { src: 'cestoRoupas.png', alt: 'Roupas', tamanho: 'P' },
+        'img19': { src: 'Peso.png', alt: 'Peso', tamanho: 'P' },
+        'img20': { src: 'Halter.png', alt: 'Halter', tamanho: 'P' },
+        'img21': { src: 'Pelúcias2.png', alt: 'Pelúcias', tamanho: 'GG' },
+        'img22': { src: 'Pelúcias3.png', alt: 'Pelúcias', tamanho: 'M' },
+        'img23': { src: 'mochila2.png', alt:'Mochila', tamanho:'MG'},
+        'img24': { src: 'Cobertor.png', alt: 'Cobertor', tamanho: 'P' },
+        'img25': { src: 'Cosmético2.png', alt: 'Cosmético', tamanho: 'P' },
+        'img26': { src: 'Livros2.png', alt: 'Livro', tamanho: 'P'},
+        'img27': { src: 'Bola.png', alt: 'Bola', tamanho: 'M'},
+        'img28': { src: 'Bola2.png', alt: 'Bola', tamanho: 'M'},
+        'img29': { src: 'tenis2.png', alt: 'Tênis', tamanho: 'P'},
+        'img30': { src: 'tenis3.png', alt: 'Tênis', tamanho: 'P'},
+        'img31': { src: 'troféu.png', alt: 'Troféu', tamanho: 'GG'},
+        
+        
     },
     //"zonas" armazena os dados das  zonas (os IDs das imagens que estão em cada zona)
     // Adicionei a propriedade 'tamanho' para cada dropzone, além disso, a propriedade 'imagens' agora é uma lista
     zonas: {
-        'galeria-esquerda': {imagens: ['img1', 'img2', 'img3', 'img4', 'img5', 'img6', 'img7', 'img8'], tamanho: 'GG'},
-        'galeria-direita': {imagens: ['img9', 'img10', 'img11', 'img12', 'img13', 'img14','img15','img16'], tamanho: 'GG'}, // Galeria tem um tamanho 'G' para aceitar tudo
+        'galeria-esquerda': {imagens: ['img1', 'img2', 'img3', 'img4', 'img5', 'img6', 'img7', 'img8',  'img9', 'img10', 'img11', 'img12', 'img13','img14','img15','img16',], tamanho: 'GG'},
+        'galeria-direita': {imagens: ['img17', 'img18', 'img19', 'img20', 'img21',  'img22', 'img23', 'img24', 'img25', 'img26',, 'img27', 'img28', 'img29','img30','img31'], tamanho: 'GG'}, // Galeria tem um tamanho 'G' para aceitar tudo
         
         // Coluna 1 (mais à esquerda - 2 dropzones)
         'col1-dz1': {imagens: [], tamanho: 'MG'}, 'col1-dz2': {imagens: [], tamanho: 'MG'},
@@ -423,6 +440,10 @@ const adicionarEventListeners = () => {
             if (resultado.includes("Parabéns")) {
                 // Chama a nova função recursiva, passando o número de confetes
                 lancarConfetes(100);
+                document.getElementById('victory').play()
+            }
+            else {
+                document.getElementById('defeat').play()
             }
             if (resultadoTexto) {
                 resultadoTexto.textContent = resultado;
@@ -443,10 +464,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const iniciarMusicaComInteracao = () => {
         // Verifica se a música já não está tocando
         if (musica.paused) {
-            musica.play().catch(error => {
+            setTimeout (musica.play().catch(error => {
                 // O .catch() é uma boa prática para lidar com possíveis erros de reprodução
                 console.log("Erro ao tentar tocar a música:", error);
-            });
+            }), 0);
         }
         
         // Remove o eventListener para que cliques futuros não tentem tocar a música novamente
