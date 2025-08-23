@@ -32,9 +32,9 @@ const comparador = (fase, jogador) => (a, ...b) => {
     const resultadoOrganizador = organizador(fase,jogador)
     resultadoPorcentagem= porcentagem(fase.length, resultadoOrganizador.length)
     if (resultadoOrganizador.length === fase.length){
-        return "Parabéns, você completou a  fase!"
+        return "Parabéns, você organizou o seu armário!"
     }
-    else {return `Tente Novamente! Você está ${resultadoPorcentagem.toFixed(0)}% correto` }
+    else {return `Continue! Você está ${resultadoPorcentagem.toFixed(0)}% correto` }
 }
 // A array com o único objeto de estado dentro dela
 
@@ -62,7 +62,8 @@ const estadoAtual = [{
     //"zonas" armazena os dados das  zonas (os IDs das imagens que estão em cada zona)
     // Adicionei a propriedade 'tamanho' para cada dropzone, além disso, a propriedade 'imagens' agora é uma lista
     zonas: {
-        'galeria': {imagens: ['img1', 'img2', 'img3', 'img4', 'img5', 'img6', 'img7', 'img8','img9', 'img10', 'img11', 'img12', 'img13', 'img14','img15','img16'], tamanho: 'G'}, // Galeria tem um tamanho 'G' para aceitar tudo
+        'galeria-esquerda': {imagens: ['img1', 'img2', 'img3', 'img4', 'img5', 'img6', 'img7', 'img8'], tamanho: 'GG'},
+        'galeria-direita': {imagens: ['img9', 'img10', 'img11', 'img12', 'img13', 'img14','img15','img16'], tamanho: 'GG'}, // Galeria tem um tamanho 'G' para aceitar tudo
         
         // Coluna 1 (mais à esquerda - 2 dropzones)
         'col1-dz1': {imagens: [], tamanho: 'MG'}, 'col1-dz2': {imagens: [], tamanho: 'MG'},
@@ -130,26 +131,6 @@ const renderizar = (estado) => {
     
     //"dropzoneHtmls" separa as imagens pertencentes a cada drop zone e organiza um objeto com as strings HTMLs corretas
     const dropzoneHtmls = Object.keys(estado.zonas).reduce((acc, zonaId) => {
-        // Se a zona analisada pelo reduce for a galeria, ele segue um caminho distinto, para organizar corretamente o resuultado final
-        if (zonaId === 'galeria') {
-            // htmlDasImagens mapeia cada imagem da galeria pelo seu ID
-            const htmlDasImagensGaleria = estado.zonas[zonaId].imagens.map(imgId => { // Acessa o array de imagens **
-                // imagem armazena os dados da imagem que está sendo mapeada pelo ID
-                const imagem = estado.imagens[imgId];
-                // "classeArrastando" verifica se a imagem que está sendo arrastada é a imagem que está sendo mapeada, e retorna a string 'arrastando' ou uma string
-                // vazia para ser usada como classe CSS
-                const classeArrastando = (estado.imagemSendoArrastada === imgId) ? 'arrastando' : '';
-                // retorna a string HTML para uma imagem.
-               return `<img src="${imagem.src}" alt="${imagem.alt}" id="${imgId}" class="imagem-arrastavel tamanho-${imagem.tamanho.toLowerCase()} ${classeArrastando}" draggable="true">`;
-            }).join('');
-            // ".join()" pega o array de strings retornado pelo .map() e o transforma em uma string única
-            // a acumuladora armazena os dados completos da galeria e das imagens como uma string HTML e faz alguns ajustes de texto para
-            // o nome da zona (Primeira Letra em Maiúsculo) com charAt(0).toUpperCase e zonaId.slice(1).replace(/-/g, ' ')
-            acc[zonaId] = `<div class="drop-zone" id="${zonaId}"><h2>${zonaId.charAt(0).toUpperCase() + zonaId.slice(1).replace(/-/g, ' ')}</h2>${htmlDasImagensGaleria}</div>`;
-            // retorna o objeto completo, com todas a galeria processada
-            return acc;
-        }
-
         // htmlDasImagens mapeia para cada drop zone, as suas respectivas imagens pelo ID
         const htmlDasImagens = estado.zonas[zonaId].imagens.map(imgId => { 
             // imagem armazena os dados da imagem que está sendo mapeada pelo ID
@@ -170,7 +151,9 @@ const renderizar = (estado) => {
     // a função retorna, no final, um registro de cada zona principal, galeria e armário, e no armário, divide corretamente cada 
     // dado de cada drop zone em seu conteiner/coluna 
     return {
-        galeria: dropzoneHtmls.galeria,
+        galeria: `
+            <div class="galeria-coluna">${dropzoneHtmls['galeria-esquerda'] || ''}</div>
+            <div class="galeria-coluna">${dropzoneHtmls['galeria-direita'] || ''}</div>`,
         armario: `
             <div class="col-container" id="col1-container">${dropzoneHtmls['col1-dz1'] || ''}${dropzoneHtmls['col1-dz2'] || ''}</div>
             <div class="col-container" id="col2-container">${dropzoneHtmls['col2-dz1'] || ''}${dropzoneHtmls['col2-dz2'] || ''}</div>
@@ -212,7 +195,6 @@ const moverImagem = (estado, idDaZonaDestino) => {
 };
 
 // Adicionei uma nova função que analisa se o objeto pode ou não ser colocado na dropzone, dependendo dos tamanhos de ambos
-
 const validarEncaixe = (estado, idDaZonaDestino) => {
     const idDaImagem = estado.imagemSendoArrastada;
     if (!idDaImagem) return false;
@@ -220,8 +202,9 @@ const validarEncaixe = (estado, idDaZonaDestino) => {
     const imagemArrastada = estado.imagens[idDaImagem];
     const zonaDestino = estado.zonas[idDaZonaDestino];
 
+
     // Se a zona de destino for a galeria, sempre permite o encaixe
-    if (idDaZonaDestino === 'galeria') {
+     if (idDaZonaDestino.startsWith('galeria-')) {
         return true;
     }
 
@@ -241,7 +224,6 @@ const validarEncaixe = (estado, idDaZonaDestino) => {
 
     return tamanhoZona >= tamanhoImagem; // Zona é igual ou maior que a imagem
 };
-
 
 //_______________________________________________________________________________________
 //Parte Impura do Código!!!
@@ -265,6 +247,73 @@ const atualizarTela = () => {
 
     //ativa a função adicionarEventListeners
     adicionarEventListeners(); 
+};
+
+// Função recursiva para criar o efeito de brilho
+const criarEfeitoBrilho = (x, y, particulasRestantes) => {
+    // Caso Base: A condição de parada. A recursão para quando
+    // não há mais partículas para criar.
+    if (particulasRestantes <= 0) {
+        return;
+    }
+
+    // Passo Recursivo:
+    const particula = document.createElement('div');
+    particula.classList.add('particula-brilho');
+
+    // Define a posição inicial da partícula onde o mouse clicou
+    particula.style.left = `${x}px`;
+    particula.style.top = `${y}px`;
+
+    // Gera valores aleatórios para o destino final da partícula
+    const destX = (Math.random() - 0.5) * 200;
+    const destY = (Math.random() - 0.5) * 200;
+
+    // Define as variáveis CSS que a animação vai usar
+    particula.style.setProperty('--x', `${destX}px`);
+    particula.style.setProperty('--y', `${destY}px`);
+
+    // Adiciona a partícula ao corpo do documento
+    document.body.appendChild(particula);
+
+    // Remove a partícula da tela após a animação terminar
+    setTimeout(() => {
+        particula.remove();
+    }, 1000);
+
+    // Chama a si mesma para criar a próxima partícula, decrementando o contador.
+    criarEfeitoBrilho(x, y, particulasRestantes - 1);
+};
+const lancarConfetes = (confetesRestantes) => {
+    // Caso Base: A condição de parada. Se não houver mais confetes a criar, a função simplesmente para.
+    if (confetesRestantes <= 0) {
+        return;
+    }
+
+    // Passo Recursivo: A lógica para criar um único confete.
+    const cores = ['#FFD700', '#FF6347', '#8A2BE2', '#00BFFF', '#32CD32'];
+    const confete = document.createElement('div');
+    confete.classList.add('confete');
+
+    // Define uma cor aleatória da nossa lista de cores
+    confete.style.backgroundColor = cores[Math.floor(Math.random() * cores.length)];
+    
+    // Define uma posição horizontal aleatória para começar a cair
+    confete.style.left = `${Math.random() * 100}vw`;
+
+    // Adiciona um atraso aleatório para que os confetes não caiam todos de uma vez
+    confete.style.animationDelay = `${Math.random() * 2}s`;
+
+    // Adiciona o confete na tela
+    document.body.appendChild(confete);
+
+    // Remove o confete da tela após 5 segundos (duração da animação) para não sobrecarregar
+    setTimeout(() => {
+        confete.remove();
+    }, 15000);
+
+    // Chama a si mesma para criar o próximo confete, decrementando o contador.
+    lancarConfetes(confetesRestantes - 1);
 };
 //adicionarEventListeners cria uma função que atualiza o estado atual com eventListeners(método que ativa uma função assim que um evento
 // for acionado na tela)
@@ -329,7 +378,7 @@ const adicionarEventListeners = () => {
             e.currentTarget.classList.remove('drag-over');
 
             const idZonaDestino = e.currentTarget.id;
-            const idZonaOrigem = estadoAtual[0].zonaDeOrigem; // Pega a zona de origem do estado
+            const idImagemArrastada = estadoAtual[0].imagemSendoArrastada;
 
             // Agora, as imagens só são colocadas na dropzone se o validarEncaixe permitir
             if (validarEncaixe(estadoAtual[0], idZonaDestino)) {
@@ -337,14 +386,27 @@ const adicionarEventListeners = () => {
                 const estadoAposMover = moverImagem(estadoAtual[0], idZonaDestino);
                 estadoAtual[0] = finalizarArrastar(estadoAposMover);
                 document.getElementById('soltar').play()
+
+                atualizarTela();
+
+                const imagemElemento = document.getElementById(idImagemArrastada);
+                if (imagemElemento) {
+                    imagemElemento.classList.add('animate-drop');
+                    criarEfeitoBrilho(e.clientX, e.clientY, 10); // Cria 10 partículas
+
+                    //setTimeOut aciona a animação de pulo na imagem
+                    setTimeout(() => {
+                        imagemElemento.classList.remove('animate-drop');
+                    }, 300);
+                }
             } else {
                 // Se o encaixe não for válido, devolve a imagem para a zona de origem (guardada anteriormente)
-                // moverImagem é utilizada para levar a imagem de volta para a origem.
-                const estadoAposDevolver = moverImagem(estadoAtual[0], idZonaOrigem); // Move de volta para a origem
-                estadoAtual[0] = finalizarArrastar(estadoAposDevolver); // Limpa o estado de arrastar
+                const idZonaOrigem = estadoAtual[0].zonaDeOrigem; 
+                const estadoAposDevolver = moverImagem(estadoAtual[0], idZonaOrigem);
+                estadoAtual[0] = finalizarArrastar(estadoAposDevolver);
+                
+                atualizarTela();
             }
-            // A tela é atualizada para mostrar o que aconteceu
-            atualizarTela(); 
         });
     });
 
@@ -358,6 +420,10 @@ const adicionarEventListeners = () => {
         botaoVerificar.addEventListener('click', () => {
             const listaJogador = obterTamanhosAtuais(estadoAtual[0]);
             const resultado = comparador(listaNivel, [])(...listaJogador);
+            if (resultado.includes("Parabéns")) {
+                // Chama a nova função recursiva, passando o número de confetes
+                lancarConfetes(100);
+            }
             if (resultadoTexto) {
                 resultadoTexto.textContent = resultado;
                 resultadoTexto.classList.remove('hidden');
@@ -371,7 +437,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const musica = document.getElementById('trilha-sonora');
     
     // Define um volume inicial (0.3 = 30% do volume)
-    musica.volume = 0.3;
+    musica.volume = 0.15;
 
     // Função que será chamada no primeiro clique
     const iniciarMusicaComInteracao = () => {
