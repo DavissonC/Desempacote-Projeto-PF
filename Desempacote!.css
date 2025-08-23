@@ -116,51 +116,50 @@ main {
     opacity: 1; /* Rótulo visível quando ocupado */
 }
 
-/* A zona da galeria (o contêiner #app-galeria) */
+
+/* ================================================================== */
+/* SEÇÃO DA GALERIA - VERSÃO CORRIGIDA E SIMPLIFICADA        */
+/* ================================================================== */
+
+/* O contêiner principal da galeria - A "caixa rígida" que faltava */
 #app-galeria {
     width: 300px;
-    min-height: 500px;
-    background-image: url(TexturaMadeira.jpg);
-    background-size: 120%;
-    box-sizing: border-box;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    height: 580px; /* ALTURA FIXA E IMUTÁVEL, alinhada com o armário */
     display: flex;
-    flex-direction: row;
-    gap: 0;
+    gap: 15px;
+    padding: 15px;
+    box-sizing: border-box;
+
+    /* Estilos visuais */
+    background-image: url(TexturaMadeira.jpg);
+    border-radius: 10px;
     box-shadow: 0 0 10px #333;
 }
 
+/* As duas colunas dentro da galeria */
 .galeria-coluna {
     width: 50%;
+    height: 100%; /* Ocupa 100% da altura da "caixa rígida" */
+    overflow-y: auto; /* A BARRA DE ROLAGEM VAI AQUI. AGORA VAI FUNCIONAR. */
+}
+
+/* A drop-zone dentro de cada coluna */
+.galeria-coluna .drop-zone {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 10px;
-}
-
-.galeria-coluna .drop-zone {
-    width: 100%;
-    min-height: 400px;
+    padding: 10px;
+    box-sizing: border-box;
+    min-height: 100%;
     background-image: url(TexturaMadeira2.jpg);
     background-size: 80%;
-    padding: 10px;
-    flex-grow: 1;
-    border-radius: 0;
 }
+
 
 .galeria-coluna .drop-zone h2 {
-    position: static;
-    background-color: transparent;
-    color: #333;
-    text-shadow: none;
-    font-size: 1.2em;
-    opacity: 1;
-    padding: 0;
-    margin-bottom: 10px;
+    display: none;
 }
-
 
 
 /* ================================================= */
@@ -295,10 +294,12 @@ main {
     opacity: 0.3;
 }
 .imagem-arrastavel:hover { transform: scale(1.1); }
+/* As imagens dentro da galeria - Tamanho ajustado para garantir que não haja conflito */
 .galeria-coluna .imagem-arrastavel {
-    width: 120px;
-    height: 120px;
+    width: 100px;
+    height: 100px;
 }
+
 /* ================================================= */
 /* ESTILOS PARA O TEXTO DE RESULTADO */
 /* ================================================= */
@@ -309,7 +310,7 @@ main {
     color: #333;
     background-color: #fff;
     padding: 15px 25px;
-    border-radius: 8px;
+    border-radius: 30px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     margin-bottom: 20px;
     transition: opacity 0.3s ease;
@@ -399,4 +400,18 @@ main {
         transform: translateY(110vh) rotateZ(720deg);
         opacity: 0;
     }
+}
+/* Estilizando a barra de rolagem */
+div::-webkit-scrollbar {
+  width: 10px; /* Largura da barra */
+  border-radius: 30px;
+}
+
+div::-webkit-scrollbar-thumb {
+  background-color: #ffffff; /* Cor do "polegar" */
+  border-radius: 30px; /* Bordas arredondadas */
+}
+
+div::-webkit-scrollbar-track {
+  background-color: #b17d4a; /* Cor do fundo */
 }
