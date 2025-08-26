@@ -37,70 +37,77 @@ const comparador = (fase, jogador) => (a, ...b) => {
 
 //estadoAtual armazena os dados atuais da fase, ou seja, onde cada imagem está e quais as características de cada imagem
 const estadoAtual = [{
-    //"imagens" armazena os dados das imagens
+    // "imagens" armazena os dados das imagens
     imagens: {
-        'img1': { src: 'Pelúcias.png', alt: 'Pelúcias', tamanho: 'GG' },
-        'img2': { src: 'Cosmético1.png', alt: 'Cosmético', tamanho: 'P'},
-        'img3': { src: 'caixas.png', alt: 'Caixas', tamanho: 'G' },
-        'img4': { src: 'roupas.png', alt: 'Roupas', tamanho: 'P' },
-        'img5': { src: 'panos.png', alt: 'Panos', tamanho: 'M' },
-        'img6': { src: 'FerroDePassar.png', alt: 'Ferro 2D', tamanho: 'P' },
-        'img7': { src: 'Livros.png', alt: 'Livro', tamanho: 'P'},
-        'img8': { src: 'bone-capivara.png', alt: 'Boné de capivara', tamanho: 'P'},
-        'img9': { src: 'mochila.png', alt:'Mochila', tamanho:'MG'},
-        'img10': { src: 'roupasdobradas.png', alt:'Roupas dobradas', tamanho:'MG'},
-        'img11': { src: 'relogio.png', alt:'Relógio', tamanho:'P'},
-        'img12': { src: 'carteira.png', alt:'Carteira', tamanho:'P'},
-        'img13': { src: 'cueca.png', alt:'Cueca', tamanho:'P'},
-        'img14': { src: 'espelho.png', alt:'Espelho', tamanho:'MG'},
-        'img15': { src: 'fone.png', alt:'Fone', tamanho:'P'},
-        'img16': { src: 'tenis.png', alt:'Tenis', tamanho:'P'},
-        'img17': { src: 'roupas1.png', alt: 'Roupas', tamanho: 'P' },
-        'img18': { src: 'cestoRoupas.png', alt: 'Roupas', tamanho: 'P' },
-        'img19': { src: 'Peso.png', alt: 'Peso', tamanho: 'P' },
-        'img20': { src: 'Halter.png', alt: 'Halter', tamanho: 'P' },
-        'img21': { src: 'Pelúcias2.png', alt: 'Pelúcias', tamanho: 'GG' },
-        'img22': { src: 'Pelúcias3.png', alt: 'Pelúcias', tamanho: 'M' },
-        'img23': { src: 'mochila2.png', alt:'Mochila', tamanho:'MG'},
-        'img24': { src: 'Cobertor.png', alt: 'Cobertor', tamanho: 'P' },
-        'img25': { src: 'Cosmético2.png', alt: 'Cosmético', tamanho: 'P' },
-        'img26': { src: 'Livros2.png', alt: 'Livro', tamanho: 'P'},
-        'img27': { src: 'Bola.png', alt: 'Bola', tamanho: 'M'},
-        'img28': { src: 'Bola2.png', alt: 'Bola', tamanho: 'M'},
-        'img29': { src: 'tenis2.png', alt: 'Tênis', tamanho: 'P'},
-        'img30': { src: 'tenis3.png', alt: 'Tênis', tamanho: 'P'},
-        'img31': { src: 'troféu.png', alt: 'Troféu', tamanho: 'GG'},
-        
-        
+        'img1': { src: 'Pelúcias.png', alt: 'Pelúcias', tamanho: 'GG', peso: 2 },
+        'img2': { src: 'Cosmético1.png', alt: 'Cosmético', tamanho: 'P', peso: 1 },
+        'img3': { src: 'caixas.png', alt: 'Caixas', tamanho: 'G', peso: 3 },
+        'img4': { src: 'roupas.png', alt: 'Roupas', tamanho: 'P', peso: 2 },
+        'img5': { src: 'panos.png', alt: 'Panos', tamanho: 'M', peso: 2 },
+        'img6': { src: 'FerroDePassar.png', alt: 'Ferro 2D', tamanho: 'P', peso: 4 },
+        'img7': { src: 'Livros.png', alt: 'Livro', tamanho: 'P', peso: 3 },
+        'img8': { src: 'bone-capivara.png', alt: 'Boné de capivara', tamanho: 'P', peso: 1 },
+        'img9': { src: 'mochila.png', alt: 'Mochila', tamanho: 'MG', peso: 3 },
+        'img10': { src: 'roupasdobradas.png', alt: 'Roupas dobradas', tamanho: 'MG', peso: 2 },
+        'img11': { src: 'relogio.png', alt: 'Relógio', tamanho: 'P', peso: 1 },
+        'img12': { src: 'carteira.png', alt: 'Carteira', tamanho: 'P', peso: 1 },
+        'img13': { src: 'cueca.png', alt: 'Cueca', tamanho: 'P', peso: 1 },
+        'img14': { src: 'espelho.png', alt: 'Espelho', tamanho: 'MG', peso: 3 },
+        'img15': { src: 'fone.png', alt: 'Fone', tamanho: 'P', peso: 2 },
+        'img16': { src: 'tenis.png', alt: 'Tenis', tamanho: 'P', peso: 2 },
+        'img17': { src: 'roupas1.png', alt: 'Roupas', tamanho: 'P', peso: 2 },
+        'img18': { src: 'cestoRoupas.png', alt: 'Roupas', tamanho: 'P', peso: 2 },
+        'img19': { src: 'Peso.png', alt: 'Peso', tamanho: 'P', peso: 5 },
+        'img20': { src: 'Halter.png', alt: 'Halter', tamanho: 'P', peso: 5 },
+        'img21': { src: 'Pelúcias2.png', alt: 'Pelúcias', tamanho: 'GG', peso: 2 },
+        'img22': { src: 'Pelúcias3.png', alt: 'Pelúcias', tamanho: 'M', peso: 2 },
+        'img23': { src: 'mochila2.png', alt: 'Mochila', tamanho: 'MG', peso: 3 },
+        'img24': { src: 'Cobertor.png', alt: 'Cobertor', tamanho: 'P', peso: 2 },
+        'img25': { src: 'Cosmético2.png', alt: 'Cosmético', tamanho: 'P', peso: 1 },
+        'img26': { src: 'Livros2.png', alt: 'Livro', tamanho: 'P', peso: 3 },
+        'img27': { src: 'Bola.png', alt: 'Bola', tamanho: 'M', peso: 3 },
+        'img28': { src: 'Bola2.png', alt: 'Bola', tamanho: 'M', peso: 3 },
+        'img29': { src: 'tenis2.png', alt: 'Tênis', tamanho: 'P', peso: 2 },
+        'img30': { src: 'tenis3.png', alt: 'Tênis', tamanho: 'P', peso: 2 },
+        'img31': { src: 'troféu.png', alt: 'Troféu', tamanho: 'GG', peso: 5 },
     },
-    //"zonas" armazena os dados das  zonas (os IDs das imagens que estão em cada zona)
-    // Adicionei a propriedade 'tamanho'(indica o tamanho de cada dropzone) para cada dropzone, além disso, a propriedade 'imagens' agora é uma lista
+    // "zonas" armazena os dados das zonas (os IDs das imagens que estão em cada zona)
     zonas: {
-        'galeria-esquerda': {imagens: ['img1', 'img2', 'img3', 'img4', 'img5', 'img6', 'img7', 'img8',  'img9', 'img10', 'img11', 'img12', 'img13','img14','img15','img16',], tamanho: 'GG'},
-        'galeria-direita': {imagens: ['img17', 'img18', 'img19', 'img20', 'img21',  'img22', 'img23', 'img24', 'img25', 'img26',, 'img27', 'img28', 'img29','img30','img31'], tamanho: 'GG'}, // Galeria tem um tamanho 'G' para aceitar tudo
-        
-        // Coluna 1 (mais à esquerda - 2 dropzones)
-        'col1-dz1': {imagens: [], tamanho: 'MG'}, 'col1-dz2': {imagens: [], tamanho: 'MG'},
+        'galeria-esquerda': { imagens: ['img1', 'img2', 'img3', 'img4', 'img5', 'img6', 'img7', 'img8', 'img9', 'img10', 'img11', 'img12', 'img13', 'img14', 'img15', 'img16',], tamanho: 'GG' },
+        'galeria-direita': { imagens: ['img17', 'img18', 'img19', 'img20', 'img21', 'img22', 'img23', 'img24', 'img25', 'img26', 'img27', 'img28', 'img29', 'img30', 'img31'], tamanho: 'GG' },
 
-        // Coluna 2 (2 dropzones)
-        'col2-dz1': {imagens: [], tamanho: 'MG'}, 'col2-dz2': {imagens: [], tamanho: 'MG'},
+        // Coluna 1 (mais à esquerda - ideal para muito pesados)
+        'col1-dz1': { imagens: [], tamanho: 'MG', pesoIdeal: 4 },
+        'col1-dz2': { imagens: [], tamanho: 'MG', pesoIdeal: 5 },
 
-        // Coluna 3 (central - 5 dropzones)
-        'col3-dz1': {imagens: [], tamanho: 'GG'}, 'col3-dz2': {imagens: [], tamanho: 'P'}, 'col3-dz3': {imagens: [], tamanho: 'P'}, 'col3-dz4': {imagens: [], tamanho: 'P'}, 'col3-dz5': {imagens: [], tamanho: 'M'},
-    
+        // Coluna 2 (ideal para pesados)
+        'col2-dz1': { imagens: [], tamanho: 'MG', pesoIdeal: 4 },
+        'col2-dz2': { imagens: [], tamanho: 'MG', pesoIdeal: 5 },
 
-        // Coluna 4 (2 dropzones)
-        'col4-dz1': {imagens: [], tamanho: 'P'}, 'col4-dz2': {imagens: [], tamanho: 'G'},
-        
-        // Coluna 5 (mais à direita - 5 dropzones)
-        'col5-dz1': {imagens: [], tamanho: 'P'}, 'col5-dz2': {imagens: [], tamanho: 'P'}, 'col5-dz3': {imagens: [], tamanho: 'P'}, 'col5-dz4': {imagens: [], tamanho: 'P'}, 'col5-dz5': {imagens: [], tamanho: 'M'}
+        // Coluna 3 (central - ideal para pesos variados/leves)
+        'col3-dz1': { imagens: [], tamanho: 'GG', pesoIdeal: 4 },
+        'col3-dz2': { imagens: [], tamanho: 'P', pesoIdeal: 1 },
+        'col3-dz3': { imagens: [], tamanho: 'P', pesoIdeal: 1 },
+        'col3-dz4': { imagens: [], tamanho: 'P', pesoIdeal: 1 },
+        'col3-dz5': { imagens: [], tamanho: 'M', pesoIdeal: 3 },
+
+        // Coluna 4 (ideal para leves)
+        'col4-dz1': { imagens: [], tamanho: 'P', pesoIdeal: 3 },
+        'col4-dz2': { imagens: [], tamanho: 'G', pesoIdeal: 5 },
+
+        // Coluna 5 (mais à direita - ideal para muito leves)
+        'col5-dz1': { imagens: [], tamanho: 'P', pesoIdeal: 3 },
+        'col5-dz2': { imagens: [], tamanho: 'P', pesoIdeal: 2 },
+        'col5-dz3': { imagens: [], tamanho: 'P', pesoIdeal: 2 },
+        'col5-dz4': { imagens: [], tamanho: 'P', pesoIdeal: 2 },
+        'col5-dz5': { imagens: [], tamanho: 'M', pesoIdeal: 5 }
     },
     // "imagemSendoArrastada" armazena o ID da imagem que o jogador está segurando
     imagemSendoArrastada: null,
     // "zonaEmHover" armazena o ID da zona em que o usuário está com o cursor sobre
     zonaEmHover: null,
     // Salva a zona de onde a imagem começou a ser arrastada (para devolver) **
-    zonaDeOrigem: null 
+    zonaDeOrigem: null
 }];
 
 // Adicionei a função hierarquiaTamanhos para facilitar a comparação
@@ -140,6 +147,46 @@ const obterTamanhosAtuais = (estado) => {
     return listaDeTamanhos;
 };
 
+const pontuação = (estado) => {
+    const ordemDasZonas = [
+        'col1-dz1', 'col1-dz2',
+        'col2-dz1', 'col2-dz2', 
+        'col3-dz1', 'col3-dz2', 'col3-dz3', 'col3-dz4', 'col3-dz5',
+        'col4-dz1', 'col4-dz2', 
+        'col5-dz1', 'col5-dz2', 'col5-dz3', 'col5-dz4', 'col5-dz5'
+    ]
+    const pesoImagensZona = ordemDasZonas.map(zonaID => {
+        const idDaImagem = estado.zonas[zonaID]?.imagens[0]
+        if (!idDaImagem) {return null}
+        const imagem = estado.imagens[idDaImagem]
+        return imagem['peso']
+    })
+    const pesoIdealZonas = ordemDasZonas.map(zonaID => {
+        return estado.zonas[zonaID].pesoIdeal
+    })
+
+    const resultado = (pesoImagensZona, pesoIdealZonas) => {
+        if (pesoIdealZonas.length === 0) {
+            return 0
+        }
+        const ultimoPesoImagem = pesoImagensZona[pesoIdealZonas.length - 1]
+        const ultimoPesoIdeal = pesoIdealZonas[pesoIdealZonas.length - 1]
+        const restoPesoImagens = pesoImagensZona.slice(0, pesoIdealZonas.length - 1)
+        const restoPesoIdeal = pesoIdealZonas.slice(0, pesoIdealZonas.length - 1)
+        if (ultimoPesoImagem === null) {
+            return 0 + resultado(restoPesoImagens, restoPesoIdeal);
+        }
+        if (ultimoPesoImagem === ultimoPesoIdeal) {
+            return 450 + resultado(restoPesoImagens, restoPesoIdeal)
+        } else if (ultimoPesoImagem < ultimoPesoIdeal) {
+            return 225 + resultado(restoPesoImagens, restoPesoIdeal)
+        } else { // ultimoPesoImagem > ultimoPesoIdeal
+            return 50 + resultado(restoPesoImagens, restoPesoIdeal)
+        }
+
+    }
+    return resultado(pesoImagensZona, pesoIdealZonas)
+}
 // "renderizar" transforma os dados do estadoAtual em um objeto com strings para ser usada no HTML
 const renderizar = (estado) => {
     
@@ -340,6 +387,32 @@ const lancarConfetes = (confetesRestantes) => {
     // Chama a si mesma para criar o próximo confete, decrementando o contador.
     lancarConfetes(confetesRestantes - 1);
 };
+
+// Função que anima a contagem da pontuação na tela
+const animarPontuacao = (scoreFinal, elementoTexto, mensagemVitoria) => {
+    const incremento = 10; // 10ms
+    const velocidade = 10; // 10ms
+
+    const contar = (pontuacaoAtual) => {
+        if (pontuacaoAtual >= scoreFinal) {
+            // Garante que o valor exibido seja exatamente o final e encerra a execução.
+            elementoTexto.textContent = `${mensagemVitoria} (PONTUAÇÂO FINAL: ${scoreFinal}pts!!!)`;
+            return; 
+        }
+        // Atualiza o texto na tela com a pontuação atual
+        elementoTexto.textContent = `${mensagemVitoria} (PONTUAÇÂO FINAL: ${pontuacaoAtual}pts!!!)`;
+        
+        // Agenda a próxima chamada da função 'contar' após um pequeno atraso,
+        // passando a pontuação incrementada como o novo valor.
+        setTimeout(() => {
+            contar(pontuacaoAtual + incremento);
+        }, velocidade);
+    };
+
+    // Inicia a recursão com a pontuação inicial de 0.
+    contar(0);
+};
+
 // adicionarEventListeners cria uma função que atualiza o estado atual com eventListeners (método que ativa uma função definida assim que um evento
 // for acionado na tela (Como um observador))
 const adicionarEventListeners = () => {
@@ -443,28 +516,44 @@ const adicionarEventListeners = () => {
 
     //Pega o elemento verificar pelo ID
     const botaoVerificar = document.getElementById('verificar-btn');
-
-    // Verifica se o botão foi clicado e ativa a função comparador, para depois imprimir o resultado na tela
     if (botaoVerificar) {
         botaoVerificar.addEventListener('click', () => {
+            // Define a ordem das zonas para o cálculo
+            const ordemDasZonas = [
+                'col1-dz1', 'col1-dz2',
+                'col2-dz1', 'col2-dz2', 
+                'col3-dz1', 'col3-dz2', 'col3-dz3', 'col3-dz4', 'col3-dz5',
+                'col4-dz1', 'col4-dz2', 
+                'col5-dz1', 'col5-dz2', 'col5-dz3', 'col5-dz4', 'col5-dz5'
+            ];
+            
+            const listaNivel = ordemDasZonas.map(zonaId => estadoAtual[0].zonas[zonaId].tamanho);
             const listaJogador = obterTamanhosAtuais(estadoAtual[0]);
-            const resultado = comparador(listaNivel, [])(...listaJogador);
-            if (resultado.includes("Parabéns")) {
-                // Chama a nova função recursiva, passando o número de confetes
-                lancarConfetes(100);
-                document.getElementById('victory').play()
-            }
-            else {
-                document.getElementById('defeat').play()
-            }
+            const resultadoTamanho = comparador(listaNivel, [])(...listaJogador);
+            
+            // Mostra o elemento de texto
             if (resultadoTexto) {
-                resultadoTexto.textContent = resultado;
                 resultadoTexto.classList.remove('hidden');
+            }
+
+            // Condição de vitória baseada no resultado de tamanho
+            if (resultadoTamanho.includes("Parabéns")) {
+                const scorePeso = pontuação(estadoAtual[0]);
+                const mensagemVitoria = resultadoTamanho;
+
+                // Inicia a animação de contagem da pontuação
+                animarPontuacao(scorePeso, resultadoTexto, mensagemVitoria);
+                
+                lancarConfetes(100);
+                document.getElementById('victory').play();
+            } else {
+                // Se não venceu, exibe apenas a mensagem de porcentagem
+                resultadoTexto.textContent = resultadoTamanho;
+                document.getElementById('defeat').play();
             }
         });
     }
 };
-
 document.addEventListener('DOMContentLoaded', atualizarTela);
 document.addEventListener('DOMContentLoaded', () => {
     const musica = document.getElementById('trilha-sonora');
