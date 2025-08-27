@@ -147,7 +147,9 @@ const obterTamanhosAtuais = (estado) => {
     return listaDeTamanhos;
 };
 
+// Quando for chamada, puxa do estado atual os dados 'peso' e 'pesoIdeal' para avaliar a pontuação do jogador
 const pontuação = (estado) => {
+    //puxa as zonas a serem avaliadas (todas do container do armário)
     const ordemDasZonas = [
         'col1-dz1', 'col1-dz2',
         'col2-dz1', 'col2-dz2', 
@@ -155,16 +157,21 @@ const pontuação = (estado) => {
         'col4-dz1', 'col4-dz2', 
         'col5-dz1', 'col5-dz2', 'col5-dz3', 'col5-dz4', 'col5-dz5'
     ]
+
+    // para cada imagem armazenada nessas zonas, armazena seu peso, se não houver imagem, armazena um valor nulo
     const pesoImagensZona = ordemDasZonas.map(zonaID => {
         const idDaImagem = estado.zonas[zonaID]?.imagens[0]
         if (!idDaImagem) {return null}
         const imagem = estado.imagens[idDaImagem]
         return imagem['peso']
     })
+
+    // para cada zona, armazena o seu peso ideal
     const pesoIdealZonas = ordemDasZonas.map(zonaID => {
         return estado.zonas[zonaID].pesoIdeal
     })
 
+    // função que calcula, acumulando de imagem a imagem, a pontuação obtida do jogador
     const resultado = (pesoImagensZona, pesoIdealZonas) => {
         if (pesoIdealZonas.length === 0) {
             return 0
@@ -177,7 +184,7 @@ const pontuação = (estado) => {
             return 0 + resultado(restoPesoImagens, restoPesoIdeal);
         }
         if (ultimoPesoImagem === ultimoPesoIdeal) {
-            return 450 + resultado(restoPesoImagens, restoPesoIdeal)
+            return 400 + resultado(restoPesoImagens, restoPesoIdeal)
         } else if (ultimoPesoImagem < ultimoPesoIdeal) {
             return 225 + resultado(restoPesoImagens, restoPesoIdeal)
         } else { // ultimoPesoImagem > ultimoPesoIdeal
@@ -187,24 +194,32 @@ const pontuação = (estado) => {
     }
     return resultado(pesoImagensZona, pesoIdealZonas)
 }
-// "renderizar" transforma os dados do estadoAtual em um objeto com strings para ser usada no HTML
+// "renderizar" transforma os dados/informações do estadoAtual em um objeto com strings para serem usadas no HTML
 const renderizar = (estado) => {
     
-    //"dropzoneHtmls" separa as imagens pertencentes a cada drop zone e organiza um objeto com as strings HTMLs corretas
+    // "dropzoneHtmls" cria uma lista com as chaves do container das zonas e aplica a função reduce nela
+    // (cada chave é uma zona, seja da galeria ou do armário)
+    // faz, no final, uma string para cada zona
     const dropzoneHtmls = Object.keys(estado.zonas).reduce((acc, zonaId) => {
-        // htmlDasImagens mapeia para cada drop zone, as suas respectivas imagens pelo ID
+
+        // htmlDasImagens armazena uma lista com strings HTML com os dados da/das imagens que estão em cada zona
+        // (utiliza o ID da imagem para isso)
         const htmlDasImagens = estado.zonas[zonaId].imagens.map(imgId => { 
+
             // imagem armazena os dados da imagem que está sendo mapeada pelo ID
             const imagem = estado.imagens[imgId];
-            // "classeArrastando" verifica se a imagem atual é a que está sendo arrastada e retorna a string 'arrastando' ou uma string
-            // vazia para ser usada como classe CSS
+
+            // "classeArrastando" verifica se a imagem atual é a que está sendo arrastada ou não e retorna a string 
+            // 'arrastando' ou uma string vazia 
             const classeArrastando = (estado.imagemSendoArrastada === imgId) ? 'arrastando' : '';
-             // retorna a string HTML para uma imagem.
+             
+            // retorna a string HTML com todos os dados necessários de uma das imagems.
            return `<img src="${imagem.src}" alt="${imagem.alt}" id="${imgId}" class="imagem-arrastavel tamanho-${imagem.tamanho.toLowerCase()} ${classeArrastando}" draggable="true">`;
-        }).join('');
-        // ".join()" pega o array de strings retornado pelo .map() e o transforma em uma string única
+        }).join(''); // ".join()" pega o array de strings retornado pelo .map() e o transforma em uma string única
+
         // a acumuladora armazena os dados completos das imagens como uma string HTML e faz alguns 
-        // ajustes de texto (Primeira Letra em Maiúsculo) para o nome da zona com charAt(0).toUpperCase e zonaId.slice(1).replace(/-/g, ' ')
+        // ajustes (Primeira Letra em Maiúsculo) para o nome da zona com charAt(0).toUpperCase 
+        // e zonaId.slice(1).replace(/-/g, ' '), por exemplo
         acc[zonaId] = `<div class="drop-zone" id="${zonaId}"><h2>${zonaId.charAt(0).toUpperCase() + zonaId.slice(1).replace(/-/g, ' ')}</h2>${htmlDasImagens}</div>`;
         // retorna o objeto completo, com todas as zonas processadas
         return acc;
@@ -224,11 +239,13 @@ const renderizar = (estado) => {
     };
 };
 
-// Funções que fazem as alterações de estado na fase
+// Funções que fazem as alterações do estado atual na fase
+
+// "iniciarArrastar" cria um novo estado, armazenando o ID da zona de origem e o ID da imagem que está sendo arrastada
 const iniciarArrastar = (estado, idDaImagem, idZonaOrigem) => ({ ...estado, imagemSendoArrastada: idDaImagem, zonaDeOrigem: idZonaOrigem }); // Uso da Zona de origem
-// "finalizarArrastar" limpa o estado de arraste
+// "finalizarArrastar" cria um novo estado, agora sem imagens sendo arrastadas
 const finalizarArrastar = (estado) => ({ ...estado, imagemSendoArrastada: null, zonaEmHover: null, zonaDeOrigem: null }); //
-// "moverImagem" move a imagem de uma zona para outra, atualizando o estado
+// "moverImagem" move a imagem de uma zona para outra, cria um novo estado com essa nova informação
 const moverImagem = (estado, idDaZonaDestino) => {
     
     // Coleta o ID da imagem que está sendo arrastada
@@ -237,7 +254,7 @@ const moverImagem = (estado, idDaZonaDestino) => {
     // Verifica se há uma imagem sendo arrastada (se o valor não é nulo)
     if (!idDaImagem) return estado;
     
-    // Armazena as chaves das zonas do estadoAtual
+    // Armazena as chaves do container das zonas do estadoAtual (armazena todas as zonas(do armário e da galeria))
     const chavesDasZonas = Object.keys(estado.zonas);
     
     // Atualiza as zonas para que, após a transferência de uma imagem para uma zona diferente, seus dados sumam da anterior e apareçam na nova
@@ -248,12 +265,13 @@ const moverImagem = (estado, idDaZonaDestino) => {
       
         // Verifica se a zona em análise é a zona de destino
         if (zonaId === idDaZonaDestino) {
-            
-            // Aqui, apenas movemos a imagem, assumindo que a validação já ocorreu.
-            acc[zonaId] = { ...estado.zonas[zonaId], imagens: [...imagensNaZona, idDaImagem] }; // Atualiza o objeto da zona e o array de imagens 
+
+            // Se for, atualiza o objeto da zona e o array de imagens, colocando o id da imagem na nova zona
+            acc[zonaId] = { ...estado.zonas[zonaId], imagens: [...imagensNaZona, idDaImagem] }; 
         } else {
+
             // Se não for a zona de destino, a imagem não é movida
-            acc[zonaId] = { ...estado.zonas[zonaId], imagens: imagensNaZona }; // Atualiza o objeto da zona e o array de imagens 
+            acc[zonaId] = { ...estado.zonas[zonaId], imagens: imagensNaZona }; 
         }
         return acc;
     }, {});
@@ -320,9 +338,8 @@ const atualizarTela = () => {
     adicionarEventListeners(); 
 };
 
-// Função para criar o efeito de brilho
+// Função para criar o efeito de brilho (perfumaria)
 const criarEfeitoBrilho = (x, y, particulasRestantes) => {
-    // A recursão para quando não há mais partículas para criar.
     if (particulasRestantes <= 0) {
         return;
     }
@@ -354,6 +371,8 @@ const criarEfeitoBrilho = (x, y, particulasRestantes) => {
     // Chama a si mesma para criar a próxima partícula, decrementando o contador.
     criarEfeitoBrilho(x, y, particulasRestantes - 1);
 };
+
+// função que lança confetes na tela do usuário (perfumaria)
 const lancarConfetes = (confetesRestantes) => {
     // Se não houver mais confetes a criar, a função para.
     if (confetesRestantes <= 0) {
@@ -388,7 +407,7 @@ const lancarConfetes = (confetesRestantes) => {
     lancarConfetes(confetesRestantes - 1);
 };
 
-// Função que anima a contagem da pontuação na tela
+// Função que anima a contagem da pontuação na tela (perfumaria)
 const animarPontuacao = (scoreFinal, elementoTexto, mensagemVitoria) => {
     const incremento = 10; // 10ms
     const velocidade = 10; // 10ms
@@ -413,8 +432,8 @@ const animarPontuacao = (scoreFinal, elementoTexto, mensagemVitoria) => {
     contar(0);
 };
 
-// adicionarEventListeners cria uma função que atualiza o estado atual com eventListeners (método que ativa uma função definida assim que um evento
-// for acionado na tela (Como um observador))
+// adicionarEventListeners cria uma função que atualiza o estado atual com eventListeners (método 
+// que ativa uma função definida assim que um evento for acionado na tela (Como um observador))
 const adicionarEventListeners = () => {
     
     // Pega o ID do elemento do HTML correspondente ao resultado produzido pela função comparador (lá do começo do código)
